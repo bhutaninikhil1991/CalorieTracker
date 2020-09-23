@@ -1,0 +1,6 @@
+micronaut:
+  application:
+    name: calorieapp
+
+USDA:
+  secretkeyid: "R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI"
