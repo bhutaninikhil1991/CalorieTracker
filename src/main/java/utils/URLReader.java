@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpUtil {
+/**
+ * class responsible for reading url content
+ */
+public class URLReader {
 
     /**
      * perform GET request to given URL and returns the response as string
@@ -15,7 +18,7 @@ public class HttpUtil {
      * @return String
      * @throws IOException
      */
-    public static String get(URL request) throws IOException {
+    public static String getUrlContent(URL request) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) request.openConnection();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line = null;
