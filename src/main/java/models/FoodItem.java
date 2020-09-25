@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 /**
  * class stores food item details
  */
@@ -10,6 +12,7 @@ public class FoodItem {
     private double fat;
     private double protein;
     private double calories;
+    private List<ServingSize> servingSizes;
 
     /**
      * constructor
@@ -19,14 +22,16 @@ public class FoodItem {
      * @param carbohydrates
      * @param fat
      * @param protein
+     * @param servingSizes
      */
-    public FoodItem(int id, String name, double carbohydrates, double fat, double protein) {
+    public FoodItem(int id, String name, double carbohydrates, double fat, double protein, List<ServingSize> servingSizes) {
         this.id = id;
         this.name = name;
         this.carbohydrates = carbohydrates;
         this.fat = fat;
         this.protein = protein;
         this.calories = 4 * carbohydrates + 9 * fat + 4 * protein;
+        this.servingSizes = servingSizes;
     }
 
     /**
@@ -80,25 +85,34 @@ public class FoodItem {
      * @return double
      */
     public double getCalories() {
-        return calories;
+        return Math.round(calories * 100.0) / 100.0;
     }
 
     /**
-     * override toString method
+     * getter for serving size
+     *
+     * @return List<ServingSize>
+     */
+    public List<ServingSize> getServingSizes() {
+        return servingSizes;
+    }
+
+    /**
+     * override default toString method
      *
      * @return String
      */
     @Override
     public String toString() {
         return "FoodItem{" +
-                "fdcID='" + id + '\'' +
-                ", description='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", carbohydrates=" + carbohydrates +
                 ", fat=" + fat +
                 ", protein=" + protein +
                 ", calories=" + calories +
+                ", servingSizes=" + servingSizes +
                 '}';
     }
-
 
 }

@@ -3,4 +3,4 @@ micronaut:
     name: calorieapp
 
 USDA:
-  secretkeyid: "R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI"
+  secretkeyid: 'R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI'

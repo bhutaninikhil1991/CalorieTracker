@@ -11,12 +11,11 @@ public class ServingSize {
      * constructor
      *
      * @param label
-     * @param gramWeight
-     * @param quantity
+     * @param ratio
      */
-    public ServingSize(String label, double gramWeight, int quantity) {
+    public ServingSize(String label, double ratio) {
         this.label = label;
-        this.ratio = calculateRatio(gramWeight, quantity);
+        this.ratio = ratio;
     }
 
     /**
@@ -31,22 +30,10 @@ public class ServingSize {
     /**
      * getter for ratio
      *
-     * @return
+     * @return double
      */
     public double getRatio() {
         return ratio;
-    }
-
-    /**
-     * Nutrient information is provided per 100gms
-     *
-     * @param gramWeight
-     * @param quantity
-     * @return double
-     */
-    private double calculateRatio(double gramWeight, int quantity) {
-        double perUnitGramWeight = gramWeight / quantity;
-        return perUnitGramWeight / 100.0;
     }
 
     /**
