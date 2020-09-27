@@ -1,1 +1,2 @@
-rootProject.name="calorieapp"
+include "client"
+include "server"

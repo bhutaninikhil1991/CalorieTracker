@@ -1,0 +1,16 @@
+micronaut:
+  application:
+    name: calorieapp
+  server:
+    cors:
+      enabled: true
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/**"
+        paths: "classpath:public"
+
+
+USDA:
+  secretkeyid: 'R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI'
