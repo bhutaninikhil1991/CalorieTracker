@@ -6,16 +6,17 @@ package models;
 public class ServingSize {
     private String label;
     private double ratio;
+    private double quantity;
 
     /**
      * constructor
      *
      * @param label
-     * @param ratio
+     * @param quantity
      */
-    public ServingSize(String label, double ratio) {
+    public ServingSize(String label, double quantity) {
         this.label = label;
-        this.ratio = ratio;
+        this.quantity = quantity;
     }
 
     /**
@@ -28,12 +29,30 @@ public class ServingSize {
     }
 
     /**
+     * getter for quantity
+     *
+     * @return double
+     */
+    public double getQuantity() {
+        return this.quantity;
+    }
+
+    /**
      * getter for ratio
      *
      * @return double
      */
     public double getRatio() {
         return ratio;
+    }
+
+    /**
+     * setter for ratio
+     *
+     * @param ratio
+     */
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
     }
 
     /**

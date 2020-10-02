@@ -30,37 +30,27 @@ public class CalorieController {
      *
      * @param fdcId
      */
-    @Get("/foods/{fdcId}")
+    // api/foods?fdcId=167782
+    @Get("/foods")
     public HTTPSingleResponse getFoodDetails(int fdcId) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         try {
             FoodItem item = getFoodDetailsByFdcID(fdcId);
             Map<String, Object> map = new HashMap<>();
-            map.put(String.valueOf(fdcId), item);
+            if (item != null)
+                map.put(String.valueOf(fdcId), item);
             response.success = true;
             response.data = map;
-        } catch (IOException e) {
+        } catch (Exception ex) {
+            //provide a user friendly message
             response.success = false;
             response.errorMessage = "unable to read food details response for fdcId:" + fdcId;
+
+            //log the error
             log.error("unable to read food details response for fdcId:" + fdcId);
+            log.error(ex.getStackTrace().toString());
         }
         return response;
-    }
-
-    /**
-     * helper function to get Food Details By FdcID
-     *
-     * @param fdcId
-     * @return FoodItem
-     * @throws IOException
-     */
-    private FoodItem getFoodDetailsByFdcID(int fdcId) throws IOException {
-        JsonObject foodDetails = USDAAPIClient.getFoodDetailsResponse(fdcId);
-
-        FoodItemsExtractorFactory foodDetailsExtractorFactory = new FoodItemsExtractorFactory();
-        FoodItemsExtractor extractor = foodDetailsExtractorFactory.getFoodItemsExtractor(foodDetails.get("dataType").getAsString());
-        FoodItem foodItem = extractor.extract(foodDetails);
-        return foodItem;
     }
 
     /**
@@ -68,7 +58,8 @@ public class CalorieController {
      *
      * @param query
      */
-    @Get("/foods/search/{query}")
+    // api/foods/search?query=Cheddar cheese
+    @Get("/foods/search")
     public HTTPSingleResponse searchFoods(String query) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         try {
@@ -80,17 +71,38 @@ public class CalorieController {
                 JsonObject food = foods.get(i).getAsJsonObject();
                 int fdcId = food.get("fdcId").getAsInt();
                 FoodItem item = getFoodDetailsByFdcID(fdcId);
-                set.add(item);
+                if (item != null)
+                    set.add(item);
             }
             response.success = true;
             map.put(query, set);
             response.data = map;
-        } catch (IOException e) {
+        } catch (Exception ex) {
+            //provide a user friendly message
             response.success = false;
             response.errorMessage = "unable to search response for query:" + query;
+
+            //log the error
             log.error("unable to search response for query:" + query);
+            log.error(ex.getStackTrace().toString());
         }
         return response;
+    }
+
+    /**
+     * helper function to get Food Details By FdcID
+     *
+     * @param fdcId
+     * @return FoodItem
+     * @throws IOException
+     */
+    private FoodItem getFoodDetailsByFdcID(int fdcId) throws Exception {
+        JsonObject foodDetails = USDAAPIClient.getFoodDetailsResponse(fdcId);
+
+        FoodItemsExtractorFactory foodDetailsExtractorFactory = new FoodItemsExtractorFactory();
+        FoodItemsExtractor extractor = foodDetailsExtractorFactory.getFoodItemsExtractor(foodDetails.get("dataType").getAsString());
+        FoodItem foodItem = extractor.extract(foodDetails);
+        return foodItem;
     }
 
 }

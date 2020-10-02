@@ -2,9 +2,13 @@ package calorieapp;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import controllers.CalorieController;
 import models.FoodItem;
 import models.ServingSize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,7 @@ import java.util.Map;
  */
 public abstract class FoodItemsExtractor {
     private Map<String, Double> nutrientMap = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(CalorieController.class);
 
     /**
      * extract food items from food details object
@@ -31,8 +36,16 @@ public abstract class FoodItemsExtractor {
             JsonObject foodNutrient = foodNutrients.get(i).getAsJsonObject();
             extractNutrient(foodNutrient);
         }
-        //extract food portions
-        List<ServingSize> servingSizes = extractFoodPortions(foodDetails);
+        List<ServingSize> servingSizes = new ArrayList<>();
+        try {
+            //extract food portions
+            servingSizes = extractFoodPortions(foodDetails);
+        } catch (Exception ex) {
+            //if there is an issue in extracting food portion then log exception and return null
+            log.error("unable to extract food portion for fdcId:" + fdcId + " name:" + name);
+            log.error(ex.getStackTrace().toString());
+            return null;
+        }
 
         //create food item object
         FoodItem foodItem = new FoodItem(fdcId, name, nutrientMap.get("carbohydrates"), nutrientMap.get("fat"), nutrientMap.get("proteins"), servingSizes);

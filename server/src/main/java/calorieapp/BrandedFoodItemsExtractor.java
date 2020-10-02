@@ -2,6 +2,7 @@ package calorieapp;
 
 import com.google.gson.JsonObject;
 import models.ServingSize;
+import utils.HelperUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +32,10 @@ public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
         if (!householdServingText.isEmpty()) {
             double baseServingSizeQuantity = foodDetails.get("servingSize").getAsDouble();
             //if the serving size label is equal to 'Quantity not specified' then skip
-            if (householdServingText.equals("Quantity not specified"))
-                return null;
-            int index = householdServingText.indexOf(' ');
-            double householdServingQuantity;
-            try {
-                householdServingQuantity = Integer.valueOf(householdServingText.substring(0, index));
-            } catch (Exception e) {
-                //if the serving text is not in proper format then skip
-                return null;
-            }
+            ServingSize householdServingSize = HelperUtils.parseServingText(householdServingText);
+            double householdServingQuantity = householdServingSize.getQuantity();
             ratio = calculateRatio(baseServingSizeQuantity, householdServingQuantity);
-            String label = householdServingText.substring(index + 1);
-            ServingSize householdServingSize = new ServingSize(label, ratio);
+            householdServingSize.setRatio(ratio);
             servingSizeList.add(0, householdServingSize);
         }
         return servingSizeList;
