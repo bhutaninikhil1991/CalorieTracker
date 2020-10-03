@@ -1,29 +1,39 @@
 package controllers;
 
+import Repository.FoodItemRepository;
 import calorieapp.FoodItemsExtractor;
 import calorieapp.FoodItemsExtractorFactory;
 import calorieapp.HTTPSingleResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import models.FoodItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.USDAAPIClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * calorie controller
  */
+@ExecuteOn(TaskExecutors.IO)
 @Controller("/api")
 public class CalorieController {
     private static final Logger log = LoggerFactory.getLogger(CalorieController.class);
+    @Inject
+    protected final FoodItemRepository foodItemRepository;
+
+    public CalorieController(FoodItemRepository foodItemRepository) {
+        this.foodItemRepository = foodItemRepository;
+    }
 
     /**
      * get food details by fdcId
@@ -84,6 +94,24 @@ public class CalorieController {
 
             //log the error
             log.error("unable to search response for query:" + query);
+            log.error(ex.getStackTrace().toString());
+        }
+        return response;
+    }
+
+    @Post("/foods")
+    public HTTPSingleResponse createFoodItem(@Body FoodItem item) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            FoodItem foodItem = foodItemRepository.save(item);
+            map.put(String.valueOf(foodItem.getId()), foodItem);
+            response.success = true;
+            response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to save record";
+            log.error("unable to save record" + item.toString());
             log.error(ex.getStackTrace().toString());
         }
         return response;

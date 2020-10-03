@@ -11,6 +11,23 @@ micronaut:
         mapping: "/**"
         paths: "classpath:public"
 
+datasources:
+  default:
+    url: jdbc:postgresql://127.0.0.1/calorie-app
+    username: bhutani
+    password: ''
+    driverClassName: "org.postgresql.Driver"
+    dialect: "postgres"
+
+jpa:
+  default:
+    packages-to-scan:
+      - 'models'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
 
 USDA:
   secretkeyid: 'R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI'

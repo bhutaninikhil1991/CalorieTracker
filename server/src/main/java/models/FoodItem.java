@@ -1,17 +1,24 @@
 package models;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * class stores food item details
  */
+@Entity
+@Table(name = "food_item")
 public class FoodItem {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
     private double carbohydrates;
     private double fat;
     private double protein;
     private double calories;
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.PERSIST)
     private List<ServingSize> servingSizes;
 
     /**
@@ -32,6 +39,10 @@ public class FoodItem {
         this.protein = protein;
         this.calories = 4 * carbohydrates + 9 * fat + 4 * protein;
         this.servingSizes = servingSizes;
+    }
+
+    public FoodItem() {
+
     }
 
     /**

@@ -1,12 +1,27 @@
 package models;
 
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+
 /**
  * class stores serving size i.e. cup, slice, oz
  */
+@Entity
+@Table(name = "serving_size")
 public class ServingSize {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String label;
     private double ratio;
     private double quantity;
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private FoodItem foodItem;
 
     /**
      * constructor
@@ -17,6 +32,11 @@ public class ServingSize {
     public ServingSize(String label, double quantity) {
         this.label = label;
         this.quantity = quantity;
+        this.ratio = 1.0 / quantity;
+    }
+
+    public ServingSize() {
+
     }
 
     /**

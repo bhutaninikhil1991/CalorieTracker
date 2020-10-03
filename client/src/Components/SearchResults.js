@@ -5,10 +5,10 @@ class SearchResults extends Component {
     render() {
         let searchResults;
         if (this.props.searchResults.length > 0) {
-            searchResults = this.props.searchResults.map(rendersearchResults);
+            searchResults = this.props.searchResults.map(renderSearchResults);
         }
 
-        function rendersearchResults(result) {
+        function renderSearchResults(result) {
             return (<tr key={result.id}>
                 <td>{result.name}</td>
                 <td>{result.carbohydrates}</td>

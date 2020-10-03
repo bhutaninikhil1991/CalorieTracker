@@ -37,6 +37,13 @@ dependencies {
     testImplementation("io.micronaut.test:micronaut-test-junit5")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     implementation("com.google.code.gson:gson:2.8.5")
+
+    compile group: 'io.micronaut.configuration', name: 'micronaut-hibernate-jpa', version: '2.2.6'
+    compile group: 'io.micronaut.configuration', name: 'micronaut-jdbc-hikari', version: '2.2.6'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
 }
 
 test.classpath += configurations.developmentOnly
