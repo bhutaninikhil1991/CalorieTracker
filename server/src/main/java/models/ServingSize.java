@@ -1,9 +1,5 @@
 package models;
 
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 
 /**
@@ -14,14 +10,13 @@ import javax.persistence.*;
 public class ServingSize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
     private String label;
     private double ratio;
     private double quantity;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private FoodItem foodItem;
+    private FoodItem item;
 
     /**
      * constructor
@@ -36,7 +31,6 @@ public class ServingSize {
     }
 
     public ServingSize() {
-
     }
 
     /**
@@ -46,6 +40,15 @@ public class ServingSize {
      */
     public String getLabel() {
         return label;
+    }
+
+    /**
+     * getter for Id
+     *
+     * @return int
+     */
+    public int getId() {
+        return id;
     }
 
     /**
@@ -73,6 +76,24 @@ public class ServingSize {
      */
     public void setRatio(double ratio) {
         this.ratio = ratio;
+    }
+
+    /**
+     * getter for foodItem
+     *
+     * @return FoodItem
+     */
+    public FoodItem getFoodItem() {
+        return item;
+    }
+
+    /**
+     * setter for food item
+     *
+     * @param foodItem
+     */
+    public void setFoodItem(FoodItem foodItem) {
+        this.item = foodItem;
     }
 
     /**

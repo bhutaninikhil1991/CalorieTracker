@@ -1,8 +1,8 @@
 package controllers;
 
-import Repository.FoodItemRepository;
-import calorieapp.FoodItemsExtractor;
-import calorieapp.FoodItemsExtractorFactory;
+import Service.FoodService;
+import Service.UserFoodService;
+import Service.UserService;
 import calorieapp.HTTPSingleResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -13,12 +13,13 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import models.FoodItem;
+import models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.HelperUtils;
 import utils.USDAAPIClient;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,12 +28,17 @@ import java.util.*;
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/api")
 public class CalorieController {
-    private static final Logger log = LoggerFactory.getLogger(CalorieController.class);
     @Inject
-    protected final FoodItemRepository foodItemRepository;
+    protected final FoodService foodService;
+    @Inject
+    protected final UserService userService;
+    @Inject
+    protected final UserFoodService userFoodService;
 
-    public CalorieController(FoodItemRepository foodItemRepository) {
-        this.foodItemRepository = foodItemRepository;
+    public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService) {
+        this.foodService = foodService;
+        this.userService = userService;
+        this.userFoodService = userFoodService;
     }
 
     /**
@@ -45,7 +51,7 @@ public class CalorieController {
     public HTTPSingleResponse getFoodDetails(int fdcId) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         try {
-            FoodItem item = getFoodDetailsByFdcID(fdcId);
+            FoodItem item = foodService.getFoodDetailsByFdcID(fdcId);
             Map<String, Object> map = new HashMap<>();
             if (item != null)
                 map.put(String.valueOf(fdcId), item);
@@ -57,8 +63,7 @@ public class CalorieController {
             response.errorMessage = "unable to read food details response for fdcId:" + fdcId;
 
             //log the error
-            log.error("unable to read food details response for fdcId:" + fdcId);
-            log.error(ex.getStackTrace().toString());
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
         }
         return response;
     }
@@ -80,7 +85,7 @@ public class CalorieController {
             for (int i = 0; i < foods.size(); i++) {
                 JsonObject food = foods.get(i).getAsJsonObject();
                 int fdcId = food.get("fdcId").getAsInt();
-                FoodItem item = getFoodDetailsByFdcID(fdcId);
+                FoodItem item = foodService.getFoodDetailsByFdcID(fdcId);
                 if (item != null)
                     set.add(item);
             }
@@ -93,44 +98,103 @@ public class CalorieController {
             response.errorMessage = "unable to search response for query:" + query;
 
             //log the error
-            log.error("unable to search response for query:" + query);
-            log.error(ex.getStackTrace().toString());
-        }
-        return response;
-    }
-
-    @Post("/foods")
-    public HTTPSingleResponse createFoodItem(@Body FoodItem item) {
-        HTTPSingleResponse response = new HTTPSingleResponse();
-        HashMap<String, Object> map = new HashMap<>();
-        try {
-            FoodItem foodItem = foodItemRepository.save(item);
-            map.put(String.valueOf(foodItem.getId()), foodItem);
-            response.success = true;
-            response.data = map;
-        } catch (Exception ex) {
-            response.success = false;
-            response.errorMessage = "unable to save record";
-            log.error("unable to save record" + item.toString());
-            log.error(ex.getStackTrace().toString());
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
         }
         return response;
     }
 
     /**
-     * helper function to get Food Details By FdcID
+     * create food Item
      *
-     * @param fdcId
-     * @return FoodItem
-     * @throws IOException
+     * @param userId
+     * @param item
+     * @return HTTPSingleResponse
      */
-    private FoodItem getFoodDetailsByFdcID(int fdcId) throws Exception {
-        JsonObject foodDetails = USDAAPIClient.getFoodDetailsResponse(fdcId);
+    @Post("/foods/{userId}")
+    public HTTPSingleResponse createFoodItemForUser(int userId, @Body FoodItem item) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            FoodItem foodItem = userFoodService.saveUserFoodItems(userId, item);
+            map.put(String.valueOf(foodItem.getId()), foodItem);
+            response.success = true;
+            response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to create food Item for userId:" + userId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
 
-        FoodItemsExtractorFactory foodDetailsExtractorFactory = new FoodItemsExtractorFactory();
-        FoodItemsExtractor extractor = foodDetailsExtractorFactory.getFoodItemsExtractor(foodDetails.get("dataType").getAsString());
-        FoodItem foodItem = extractor.extract(foodDetails);
-        return foodItem;
+    /**
+     * delete user created food Item
+     *
+     * @param foodItemId
+     * @return HTTPSingleResponse
+     */
+    @Post("/foods")
+    public HTTPSingleResponse deleteUserCreatedFoodItem(int foodItemId) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            foodService.deleteFoodById(foodItemId);
+            response.success = true;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to delete record for foodItemId:" + foodItemId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * get user created food Items
+     *
+     * @param userId
+     * @return HTTPSingleResponse
+     */
+    @Get("/foods/user")
+    public HTTPSingleResponse getUserCreatedFoodItems(int userId) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            List<FoodItem> userFoods = userService.getUserFoodItems(userId);
+            map.put(String.valueOf(userId), userFoods);
+            response.success = true;
+            response.data = map;
+            if (userFoods.size() <= 0) {
+                response.errorMessage = "No records found";
+            }
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to fetch food Items for userId:" + userId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * register user
+     *
+     * @param user
+     * @return HTTPSingleResponse
+     */
+    @Post("users/register")
+    public HTTPSingleResponse registerUser(@Body User user) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            User usr = userService.createUser(user);
+            map.put(String.valueOf(usr.getId()), usr);
+            response.success = true;
+            response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to register user";
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
     }
 
 }

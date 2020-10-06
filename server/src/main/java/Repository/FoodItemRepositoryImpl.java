@@ -29,4 +29,10 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
         entityManager.persist(item);
         return item;
     }
+
+    @Override
+    @Transactional
+    public void deleteById(@NotNull Integer id) {
+        findById(id).ifPresent(entityManager::remove);
+    }
 }

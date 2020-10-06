@@ -9,4 +9,6 @@ public interface FoodItemRepository {
     Optional<FoodItem> findById(@NotNull Integer id);
 
     FoodItem save(@NotNull FoodItem item);
+
+    void deleteById(@NotNull Integer id);
 }

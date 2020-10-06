@@ -11,14 +11,17 @@ import java.util.List;
 public class FoodItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
     private String name;
     private double carbohydrates;
     private double fat;
     private double protein;
     private double calories;
 
-    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.PERSIST)
+    @ManyToOne
+    private User creator;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
     private List<ServingSize> servingSizes;
 
     /**
@@ -41,6 +44,9 @@ public class FoodItem {
         this.servingSizes = servingSizes;
     }
 
+    /**
+     * default constructor
+     */
     public FoodItem() {
 
     }
@@ -106,6 +112,16 @@ public class FoodItem {
      */
     public List<ServingSize> getServingSizes() {
         return servingSizes;
+    }
+
+
+    /**
+     * setter for user
+     *
+     * @param creator
+     */
+    public void setUser(User creator) {
+        this.creator = creator;
     }
 
     /**

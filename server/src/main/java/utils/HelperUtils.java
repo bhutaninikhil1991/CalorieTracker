@@ -1,11 +1,15 @@
 package utils;
 
+import controllers.CalorieController;
 import models.ServingSize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * class contains helper methods
  */
 public class HelperUtils {
+    private static final Logger log = LoggerFactory.getLogger(CalorieController.class);
 
     /**
      * helper method for parsing Serving Text
@@ -25,5 +29,10 @@ public class HelperUtils {
         }
         String label = servingText.substring(index + 1);
         return new ServingSize(label, quantity);
+    }
+
+    public static void logErrorMessage(String errorDescription, Exception ex) {
+        log.error(errorDescription);
+        log.error(ex.getStackTrace().toString());
     }
 }
