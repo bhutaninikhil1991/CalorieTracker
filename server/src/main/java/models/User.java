@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,7 +16,9 @@ public class User {
     private int id;
     private String emailAddress;
     private String password;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FoodItem> userCreatedFoods;
 
 

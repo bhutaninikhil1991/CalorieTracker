@@ -1,11 +1,9 @@
 package calorieapp;
 
 import com.google.gson.JsonObject;
+import models.FoodItem;
 import models.ServingSize;
 import utils.HelperUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -20,15 +18,13 @@ public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
      * @return ServingSize
      */
     @Override
-    public List<ServingSize> extractFoodPortions(JsonObject foodDetails) {
-        List<ServingSize> servingSizeList = new ArrayList<>();
+    public void extractFoodPortions(FoodItem foodItem, JsonObject foodDetails) {
         String householdServingText = foodDetails.get("householdServingFullText").getAsString();
         String baseServingSizeLabel = foodDetails.get("servingSizeUnit").getAsString();
         // The base serving size is provided with a common measuring unit such as grams or milliliters. All nutrient
         // amounts are normalized to 1 of this measuring unit (i.e. how much protein is in 1 gram of applesauce).
         double ratio = 1.0;
         ServingSize baseServingSize = new ServingSize(baseServingSizeLabel, ratio);
-        servingSizeList.add(baseServingSize);
         if (!householdServingText.isEmpty()) {
             double baseServingSizeQuantity = foodDetails.get("servingSize").getAsDouble();
             //if the serving size label is equal to 'Quantity not specified' then skip
@@ -36,9 +32,10 @@ public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
             double householdServingQuantity = householdServingSize.getQuantity();
             ratio = calculateRatio(baseServingSizeQuantity, householdServingQuantity);
             householdServingSize.setRatio(ratio);
-            servingSizeList.add(0, householdServingSize);
+            foodItem.addServingSize(householdServingSize);
+        } else {
+            foodItem.addServingSize(baseServingSize);
         }
-        return servingSizeList;
     }
 
     /**

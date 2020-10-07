@@ -3,8 +3,11 @@ package Service;
 import Repository.FoodItemRepository;
 import calorieapp.FoodItemsExtractor;
 import calorieapp.FoodItemsExtractorFactory;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import models.FoodItem;
+import models.ServingSize;
+import utils.HelperUtils;
 import utils.USDAAPIClient;
 
 import javax.inject.Singleton;
@@ -69,5 +72,34 @@ public class FoodService {
         FoodItemsExtractor extractor = foodDetailsExtractorFactory.getFoodItemsExtractor(foodDetails.get("dataType").getAsString());
         FoodItem foodItem = extractor.extract(foodDetails);
         return foodItem;
+    }
+
+    /**
+     * extract food data from json object
+     *
+     * @param object
+     * @return FoodItem
+     */
+    public FoodItem extractFoodData(JsonObject object) {
+        try {
+            String name = object.get("name").getAsString();
+            double carbohydrates = object.get("carbohydrates").getAsDouble();
+            double fat = object.get("fat").getAsDouble();
+            double protein = object.get("protein").getAsDouble();
+            FoodItem foodItem = new FoodItem(0, name, carbohydrates, fat, protein);
+            JsonArray jsonArray = object.get("servingSizes").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonObject servingJson = jsonArray.get(i).getAsJsonObject();
+                String label = servingJson.get("label").getAsString();
+                double quantity = servingJson.get("quantity").getAsDouble();
+                ServingSize servingSize = new ServingSize(label, quantity);
+                foodItem.addServingSize(servingSize);
+            }
+            return foodItem;
+        } catch (Exception ex) {
+            String errorDescription = "unable to parse json object";
+            HelperUtils.logErrorMessage(errorDescription, ex);
+            return null;
+        }
     }
 }

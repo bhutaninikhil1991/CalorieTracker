@@ -1,6 +1,9 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,11 +21,18 @@ public class FoodItem {
     private double protein;
     private double calories;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User creator;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
-    private List<ServingSize> servingSizes;
+    @OneToMany(
+            mappedBy = "item",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<ServingSize> servingSizes = new ArrayList<>();
 
     /**
      * constructor
@@ -32,16 +42,14 @@ public class FoodItem {
      * @param carbohydrates
      * @param fat
      * @param protein
-     * @param servingSizes
      */
-    public FoodItem(int id, String name, double carbohydrates, double fat, double protein, List<ServingSize> servingSizes) {
+    public FoodItem(int id, String name, double carbohydrates, double fat, double protein) {
         this.id = id;
         this.name = name;
         this.carbohydrates = carbohydrates;
         this.fat = fat;
         this.protein = protein;
         this.calories = 4 * carbohydrates + 9 * fat + 4 * protein;
-        this.servingSizes = servingSizes;
     }
 
     /**
@@ -106,16 +114,6 @@ public class FoodItem {
     }
 
     /**
-     * getter for serving size
-     *
-     * @return List<ServingSize>
-     */
-    public List<ServingSize> getServingSizes() {
-        return servingSizes;
-    }
-
-
-    /**
      * setter for user
      *
      * @param creator
@@ -125,21 +123,50 @@ public class FoodItem {
     }
 
     /**
+     * getter for serving size
+     *
+     * @return List<ServingSize>
+     */
+    public List<ServingSize> getServingSizes() {
+        return servingSizes;
+    }
+
+    /**
+     * add serving size to the list
+     *
+     * @param servingSize
+     */
+    public void addServingSize(ServingSize servingSize) {
+        servingSizes.add(servingSize);
+        servingSize.setFoodItem(this);
+    }
+
+    /**
+     * remove serving size
+     *
+     * @param servingSize
+     */
+    public void removeServingSize(ServingSize servingSize) {
+        servingSizes.remove(servingSize);
+        servingSize.setFoodItem(null);
+    }
+
+    /**
      * override default toString method
      *
      * @return String
      */
     @Override
     public String toString() {
-        return "FoodItem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", carbohydrates=" + carbohydrates +
-                ", fat=" + fat +
-                ", protein=" + protein +
-                ", calories=" + calories +
-                ", servingSizes=" + servingSizes +
+        return "{" +
+                "id:" + id +
+                ", name:'" + name + '\'' +
+                ", carbohydrates:" + carbohydrates +
+                ", fat:" + fat +
+                ", protein:" + protein +
+                ", calories:" + calories +
+//                ", creator:" + creator +
+                ", servingSizes:" + servingSizes +
                 '}';
     }
-
 }

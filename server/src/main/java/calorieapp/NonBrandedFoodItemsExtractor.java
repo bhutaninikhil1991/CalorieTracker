@@ -2,6 +2,7 @@ package calorieapp;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import models.FoodItem;
 import models.ServingSize;
 
 import java.util.ArrayList;
@@ -19,15 +20,18 @@ public abstract class NonBrandedFoodItemsExtractor extends FoodItemsExtractor {
      * @param foodDetails
      * @return List<ServingSize>
      */
-    public List<ServingSize> extractFoodPortions(JsonObject foodDetails) {
+    public void extractFoodPortions(FoodItem foodItem, JsonObject foodDetails) {
         JsonArray foodPortions = foodDetails.getAsJsonArray("foodPortions");
         for (int i = 0; i < foodPortions.size(); i++) {
             JsonObject foodPortion = foodPortions.get(i).getAsJsonObject();
-            ServingSize servingSize = extractFoodPortion(foodPortion);
-            if (servingSize != null)
-                servingSizeList.add(servingSize);
+            try {
+                ServingSize servingSize = extractFoodPortion(foodPortion);
+                if (servingSize != null)
+                    foodItem.addServingSize(servingSize);
+            } catch (Exception ex) {
+                continue;
+            }
         }
-        return servingSizeList;
     }
 
     /**

@@ -36,10 +36,11 @@ public abstract class FoodItemsExtractor {
             JsonObject foodNutrient = foodNutrients.get(i).getAsJsonObject();
             extractNutrient(foodNutrient);
         }
-        List<ServingSize> servingSizes = new ArrayList<>();
+        //create food item object
+        FoodItem foodItem = new FoodItem(fdcId, name, nutrientMap.get("carbohydrates"), nutrientMap.get("fat"), nutrientMap.get("proteins"));
         try {
-            //extract food portions
-            servingSizes = extractFoodPortions(foodDetails);
+            //extract food portions and store it in food item object
+            extractFoodPortions(foodItem, foodDetails);
         } catch (Exception ex) {
             //if there is an issue in extracting food portion then log exception and return null
             log.error("unable to extract food portion for fdcId:" + fdcId + " name:" + name);
@@ -47,8 +48,6 @@ public abstract class FoodItemsExtractor {
             return null;
         }
 
-        //create food item object
-        FoodItem foodItem = new FoodItem(fdcId, name, nutrientMap.get("carbohydrates"), nutrientMap.get("fat"), nutrientMap.get("proteins"), servingSizes);
         return foodItem;
     }
 
@@ -68,7 +67,7 @@ public abstract class FoodItemsExtractor {
             nutrientMap.put("carbohydrates", foodNutrient.get("amount").getAsDouble());
     }
 
-    public abstract List<ServingSize> extractFoodPortions(JsonObject foodDetails);
+    public abstract void extractFoodPortions(FoodItem foodItem, JsonObject foodDetails);
 
     /**
      * Nutrient information is provided per 100 grams, so ratio is compared to this standard.

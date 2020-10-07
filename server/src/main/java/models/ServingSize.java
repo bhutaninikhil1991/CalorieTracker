@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -15,7 +17,9 @@ public class ServingSize {
     private double ratio;
     private double quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id")
+    @JsonIgnore
     private FoodItem item;
 
     /**
@@ -30,6 +34,9 @@ public class ServingSize {
         this.ratio = 1.0 / quantity;
     }
 
+    /**
+     * default constructor
+     */
     public ServingSize() {
     }
 
@@ -103,7 +110,7 @@ public class ServingSize {
      */
     @Override
     public String toString() {
-        return "ServingSize{" +
+        return "{" +
                 "label='" + label + '\'' +
                 ", ratio=" + ratio +
                 '}';

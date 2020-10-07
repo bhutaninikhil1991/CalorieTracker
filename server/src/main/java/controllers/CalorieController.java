@@ -6,6 +6,7 @@ import Service.UserService;
 import calorieapp.HTTPSingleResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -14,8 +15,6 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import models.FoodItem;
 import models.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utils.HelperUtils;
 import utils.USDAAPIClient;
 
@@ -107,18 +106,26 @@ public class CalorieController {
      * create food Item
      *
      * @param userId
-     * @param item
+     * @param object
      * @return HTTPSingleResponse
      */
     @Post("/foods/{userId}")
-    public HTTPSingleResponse createFoodItemForUser(int userId, @Body FoodItem item) {
+    public HTTPSingleResponse createFoodItemForUser(int userId, @Body String object) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         try {
-            FoodItem foodItem = userFoodService.saveUserFoodItems(userId, item);
-            map.put(String.valueOf(foodItem.getId()), foodItem);
-            response.success = true;
-            response.data = map;
+            JsonObject foodObject = new JsonParser().parse(object).getAsJsonObject();
+            FoodItem foodItem = foodService.extractFoodData(foodObject);
+            // error occurred show appropriate error message
+            if (foodItem == null) {
+                response.success = false;
+                response.errorMessage = "unable to parse json object";
+            } else {
+                FoodItem savedItem = userFoodService.saveUserFoodItems(userId, foodItem);
+                map.put(String.valueOf(savedItem.getId()), savedItem);
+                response.success = true;
+                response.data = map;
+            }
         } catch (Exception ex) {
             response.success = false;
             response.errorMessage = "unable to create food Item for userId:" + userId;
@@ -130,19 +137,19 @@ public class CalorieController {
     /**
      * delete user created food Item
      *
-     * @param foodItemId
+     * @param foodId
      * @return HTTPSingleResponse
      */
-    @Post("/foods")
-    public HTTPSingleResponse deleteUserCreatedFoodItem(int foodItemId) {
+    @Post("/foods/remove/{foodId}")
+    public HTTPSingleResponse deleteUserCreatedFoodItem(int foodId) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         try {
-            foodService.deleteFoodById(foodItemId);
+            foodService.deleteFoodById(foodId);
             response.success = true;
         } catch (Exception ex) {
             response.success = false;
-            response.errorMessage = "unable to delete record for foodItemId:" + foodItemId;
+            response.errorMessage = "unable to delete record for foodItemId:" + foodId;
             HelperUtils.logErrorMessage(response.errorMessage, ex);
         }
         return response;
