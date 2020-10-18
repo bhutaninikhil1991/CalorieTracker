@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,12 +27,11 @@ public class FoodItem {
     private User creator;
 
     @OneToMany(
-            mappedBy = "item",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
-    @JsonIgnore
+    @JoinColumn(name = "food_item_id", referencedColumnName = "ID")
     private List<ServingSize> servingSizes = new ArrayList<>();
 
     /**
@@ -128,7 +128,7 @@ public class FoodItem {
      * @return List<ServingSize>
      */
     public List<ServingSize> getServingSizes() {
-        return servingSizes;
+        return Collections.unmodifiableList(servingSizes);
     }
 
     /**
@@ -137,18 +137,8 @@ public class FoodItem {
      * @param servingSize
      */
     public void addServingSize(ServingSize servingSize) {
-        servingSizes.add(servingSize);
-        servingSize.setFoodItem(this);
-    }
-
-    /**
-     * remove serving size
-     *
-     * @param servingSize
-     */
-    public void removeServingSize(ServingSize servingSize) {
-        servingSizes.remove(servingSize);
-        servingSize.setFoodItem(null);
+        ServingSize newServingSize = new ServingSize(servingSize.getServingLabel(), servingSize.getServingAmount());
+        servingSizes.add(newServingSize);
     }
 
     /**
@@ -165,7 +155,6 @@ public class FoodItem {
                 ", fat:" + fat +
                 ", protein:" + protein +
                 ", calories:" + calories +
-//                ", creator:" + creator +
                 ", servingSizes:" + servingSizes +
                 '}';
     }

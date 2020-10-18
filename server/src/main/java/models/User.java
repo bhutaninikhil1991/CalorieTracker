@@ -1,8 +1,11 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,6 +21,7 @@ public class User {
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
     @JsonIgnore
     private List<FoodItem> userCreatedFoods;
 
@@ -32,12 +36,21 @@ public class User {
     }
 
     /**
+     * getter for email Address
+     *
+     * @return String
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /**
      * getter for user created food items
      *
      * @return List<FoodItem>
      */
     public List<FoodItem> getUserCreatedFoods() {
-        return userCreatedFoods;
+        return Collections.unmodifiableList(userCreatedFoods);
     }
 
     /**

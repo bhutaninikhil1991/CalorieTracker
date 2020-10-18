@@ -1,7 +1,5 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 /**
@@ -13,25 +11,20 @@ public class ServingSize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String label;
+    private String servingLabel;
     private double ratio;
-    private double quantity;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id")
-    @JsonIgnore
-    private FoodItem item;
+    private double servingAmount;
 
     /**
      * constructor
      *
-     * @param label
-     * @param quantity
+     * @param servingLabel
+     * @param servingAmount
      */
-    public ServingSize(String label, double quantity) {
-        this.label = label;
-        this.quantity = quantity;
-        this.ratio = 1.0 / quantity;
+    public ServingSize(String servingLabel, double servingAmount) {
+        this.servingLabel = servingLabel;
+        this.servingAmount = servingAmount;
+        this.ratio = 1.0 / servingAmount;
     }
 
     /**
@@ -45,8 +38,8 @@ public class ServingSize {
      *
      * @return String
      */
-    public String getLabel() {
-        return label;
+    public String getServingLabel() {
+        return servingLabel;
     }
 
     /**
@@ -63,8 +56,8 @@ public class ServingSize {
      *
      * @return double
      */
-    public double getQuantity() {
-        return this.quantity;
+    public double getServingAmount() {
+        return this.servingAmount;
     }
 
     /**
@@ -86,24 +79,6 @@ public class ServingSize {
     }
 
     /**
-     * getter for foodItem
-     *
-     * @return FoodItem
-     */
-    public FoodItem getFoodItem() {
-        return item;
-    }
-
-    /**
-     * setter for food item
-     *
-     * @param foodItem
-     */
-    public void setFoodItem(FoodItem foodItem) {
-        this.item = foodItem;
-    }
-
-    /**
      * override toString method
      *
      * @return String
@@ -111,7 +86,8 @@ public class ServingSize {
     @Override
     public String toString() {
         return "{" +
-                "label='" + label + '\'' +
+                "label='" + servingLabel + '\'' +
+                ", amount='" + servingAmount + '\'' +
                 ", ratio=" + ratio +
                 '}';
     }

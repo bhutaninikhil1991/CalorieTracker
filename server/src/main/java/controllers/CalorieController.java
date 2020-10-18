@@ -115,7 +115,7 @@ public class CalorieController {
         HashMap<String, Object> map = new HashMap<>();
         try {
             JsonObject foodObject = new JsonParser().parse(object).getAsJsonObject();
-            FoodItem foodItem = foodService.extractFoodData(foodObject);
+            FoodItem foodItem = foodService.extractFoodData(foodObject.getAsJsonObject("foodItem"));
             // error occurred show appropriate error message
             if (foodItem == null) {
                 response.success = false;
@@ -167,6 +167,9 @@ public class CalorieController {
         HashMap<String, Object> map = new HashMap<>();
         try {
             List<FoodItem> userFoods = userService.getUserFoodItems(userId);
+//            for (FoodItem userFood : userFoods) {
+//                userFood.setSelectedServing(userFood.getServingSizes().get(0));
+//            }
             map.put(String.valueOf(userId), userFoods);
             response.success = true;
             response.data = map;

@@ -29,7 +29,7 @@ public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
             double baseServingSizeQuantity = foodDetails.get("servingSize").getAsDouble();
             //if the serving size label is equal to 'Quantity not specified' then skip
             ServingSize householdServingSize = HelperUtils.parseServingText(householdServingText);
-            double householdServingQuantity = householdServingSize.getQuantity();
+            double householdServingQuantity = householdServingSize.getServingAmount();
             ratio = calculateRatio(baseServingSizeQuantity, householdServingQuantity);
             householdServingSize.setRatio(ratio);
             foodItem.addServingSize(householdServingSize);

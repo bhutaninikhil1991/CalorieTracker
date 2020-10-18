@@ -1,39 +1,30 @@
 import React, {Component} from "react";
-import {Table} from "react-bootstrap";
+import FoodItem from "./FoodItem";
 
 class SearchResults extends Component {
     render() {
         let searchResults;
-        if (this.props.searchResults.length > 0) {
-            searchResults = this.props.searchResults.map(renderSearchResults);
+        if (this.props.error) {
+            searchResults = (
+                <p className="SearchResults__error">
+                    Sorry, I can't find anything that matches your query. May be try something different?
+                </p>
+            );
+        } else {
+            if (this.props.searchResults) {
+                searchResults = this.props.searchResults.map(result => {
+                    return (
+                        <FoodItem key={result.foodItemId}
+                                  item={result}/>
+                    );
+                });
+            }
         }
-
-        function renderSearchResults(result) {
-            return (<tr key={result.id}>
-                <td>{result.name}</td>
-                <td>{result.carbohydrates}</td>
-                <td>{result.fat}</td>
-                <td>{result.protein}</td>
-                <td>{result.calories}</td>
-            </tr>);
-        }
-
-        return <div>
-            <Table striped bordered condensed hover>
-                <thead>
-                <tr>
-                    <th>Food Name</th>
-                    <th>Carbohydrates</th>
-                    <th>Fat</th>
-                    <th>Proteins</th>
-                    <th>Calories</th>
-                </tr>
-                </thead>
-                <tbody>
+        return (
+            <div className="searchResults">
                 {searchResults}
-                </tbody>
-            </Table>
-        </div>;
+            </div>
+        );
     }
 }
 

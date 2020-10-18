@@ -1,38 +1,155 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
+
+.FoodsPanel__tabs {
+    margin-bottom: 26px;
+}
+
+.FoodsPanel__tabs span {
+    padding: 0 10px 4px 10px;
+    margin-right: 34px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.FoodsPanel__tabs span.current {
+    font-weight: bold;
+    border-bottom: 4px solid #08ae23;
+}
+
+.FoodsPanel__tabs--createFoodbutton {
+    text-transform: lowercase;
+    margin-left: 14px;
+    margin-right: 0;
+    display: none;
+}
+
+span.small-button {
+    padding: 4px 10px 4px 10px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #eeeeee;
+    cursor: pointer;
+    background: #308bdf;
+    border-radius: 2px;
+}
+
+.small-button:hover {
+    text-decoration: underline;
+}
+
+span.FoodsPanel__tab--createFoodbutton.current {
+    display: inline-block;
+    font-weight: normal;
+    border: none;
+    margin-right: 34px;
+}
+
+span.FoodsPanel__edit-foods {
+    padding: 0;
+    margin: 0 20px 0 0;
+    color: #c22317;
+    border-bottom: 0px solid #D9291C;
+    font-size: 15px;
+    display: none;
+}
+
+span.FoodsPanel__edit-foods.current {
+    display: inline-block;
+    font-weight: normal;
+    border-bottom: 0px solid #D9291C;
+}
+
+span.FoodsPanel__edit-foods:hover {
+    border-bottom-width: 1px;
+    color: #D9291C;
+}
+
+span.FoodsPanel__edit-foods.current.edit-mode {
+    font-size: 15px;
+    color: #003300;
+    padding: 6px 24px;
+    border: 2px solid #c22317;
+    border-radius: 6px;
+    cursor: default;
+}
+
+span.FoodsPanel__edit-foods--done-link {
+    padding: 0 0 0 4px;
+    margin: 0;
+    font-size: 15px;
+    color: #07961E;
+    text-decoration: underline;
+}
+
+span.FoodsPanel__edit-foods--done-link:hover {
+    color: #067D19;
+    text-decoration: none;
+}
+
+.FoodItem {
+    border-bottom: 1px solid #b5c4b7;
+    padding: 18px 30px 18px 23px;
+}
+
+.FoodItem__link {
+    color: #003300;
+}
+
+.FoodItem__link:hover {
+    color: #08ae23;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.FoodItem img {
+    width: 25px;
+    margin-right: 40px;
+}
+
+.FoodItem span {
+    position: relative;
+    top: 1px;
+}
+
+.content-container {
+    width: 950px;
+    margin: 114px auto 0 auto;
+}
+

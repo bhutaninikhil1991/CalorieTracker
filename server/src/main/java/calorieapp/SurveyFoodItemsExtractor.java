@@ -18,7 +18,7 @@ public class SurveyFoodItemsExtractor extends NonBrandedFoodItemsExtractor {
     public ServingSize extractFoodPortion(JsonObject foodPortion) {
         String portionDescription = foodPortion.get("portionDescription").getAsString();
         ServingSize servingSize = HelperUtils.parseServingText(portionDescription);
-        double quantity = servingSize.getQuantity();
+        double quantity = servingSize.getServingAmount();
         double gramWeight = foodPortion.get("gramWeight").getAsDouble();
         double ratio = calculateRatio(gramWeight, quantity);
         servingSize.setRatio(ratio);
