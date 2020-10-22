@@ -8,7 +8,8 @@ class SearchFood extends Component {
 
     render() {
         return (
-            <div>
+            <div className="SearchFood">
+                <h1 className="page-title">Search Food</h1>
                 <input type="text" placeholder="search" value={this.props.searchFoodItem}
                        onChange={this.handleSearchChange.bind(this)}/>
             </div>

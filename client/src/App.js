@@ -5,7 +5,7 @@ import {
     Route,
 } from "react-router-dom";
 import './App.css';
-import CreateFoodItem from "./Components/CreateFoodItem";
+import CreateFoodView from "./Components/CreateFoodView";
 import FoodViewContainer from "./Components/FoodViewContainer";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
                         <FoodViewContainer/>
                     </Route>
                     <Route path="/createfood">
-                        <CreateFoodItem/>
+                        <CreateFoodView/>
                     </Route>
                 </Switch>
             </div>

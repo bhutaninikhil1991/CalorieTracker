@@ -2,6 +2,9 @@ import React, {Component} from "react";
 import SearchResults from "./SearchResults";
 import {Link} from "react-router-dom";
 import MyFoods from "./MyFoods";
+import carbsIcon from "../resources/bread-emoji.png";
+import fatIcon from "../resources/bacon-strip-emoji.png";
+import proteinIcon from "../resources/steak-emoji.png";
 
 
 class FoodsPanel extends Component {
@@ -25,6 +28,14 @@ class FoodsPanel extends Component {
 
             this.props.handleSwitchTab(tabNumber)
         }
+    }
+
+    shouldDisplayPanelHeader() {
+        if ((this.props.currentTab == 0 && this.props.searchError)
+            || (this.props.currentTab == 1 && !this.props.myFoods.length)) {
+            return false;
+        }
+        return true;
     }
 
     editMode() {
@@ -73,6 +84,17 @@ class FoodsPanel extends Component {
                     </Link>
                     {editLink}
                 </div>
+
+                {
+                    this.shouldDisplayPanelHeader() &&
+                    <div className="FoodsPanel__header">
+                        <span className="FoodsPanel__header--macros">
+                        <img src={carbsIcon} alt="carbohydrates" title="carbohydrates"/>
+                        <img src={fatIcon} alt="fat" title="fat"/>
+                        <img src={proteinIcon} alt="protein" title="protein"/>
+                        </span>
+                    </div>
+                }
 
                 {
                     this.props.currentTab === 0 &&

@@ -3,8 +3,10 @@ import update from "immutability-helper"
 import {SERVER_URL} from "../config";
 import ServingSize from "./ServingSize";
 import ItemDeleteButton from "./ItemDeleteButton";
+import plusIcon from "../resources/plus-icon.png";
+import trashIcon from "../resources/trash-icon.png";
 
-class FoodItem extends Component {
+class AddableFoodItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -78,8 +80,6 @@ class FoodItem extends Component {
     }
 
     calculateItemTotals() {
-        console.log("hi")
-        console.log(this.state.item)
         let item = this.state.item;
         let totalCalories, totalCarbohydrates, totalFat, totalProtein;
         totalCalories = totalCarbohydrates = totalFat = totalProtein = 0;
@@ -118,33 +118,44 @@ class FoodItem extends Component {
             itemTotals = this.calculateItemTotals();
         }
 
-        return (<div
-            className={'FoodItem' + (this.state.adding ? ' adding' : '') + (this.state.deleting ? ' deleting' : '')}
-            onClick={this.handleItemClick.bind(this)}>
-            <span>{foodName}</span>
-            {this.state.item &&
-            <span>
-                <span>
-                    <span>{itemTotals.carbohydrates}</span>
-                    <span>{itemTotals.fat}</span>
-                    <span>{itemTotals.protein}</span>
+        let plusButtonImg;
+        if (this.props.editMode)
+            plusButtonImg = trashIcon;
+        else
+            plusButtonImg = plusIcon;
+
+        return (
+            <div
+                className={'AddableFoodItem' + (this.state.adding ? ' adding' : '') + (this.state.deleting ? ' deleting' : '')}
+                onClick={this.handleItemClick.bind(this)}>
+                <img src={plusButtonImg} alt="Add" className="addable-item__plus"/>
+                <span className="FoodItem__food">
+                    <span className="FoodItem__food--name">{foodName}</span>
                 </span>
-                <span>{itemTotals.calories}</span>
-            </span>
-            }
+                {this.state.item &&
+                <span>
+                    <span className="FoodItem__macros">
+                        <span className="FoodItem__macros--carbs">{itemTotals.carbohydrates}</span>
+                        <span className="FoodItem__macros--fat">{itemTotals.fat}</span>
+                        <span className="FoodItem__macros--protein">{itemTotals.protein}</span>
+                    </span>
+                    <span className="FoodItem__calories">{itemTotals.calories}</span>
+                </span>}
 
-            {this.state.adding && this.state.item &&
-            <ServingSize
-                selectedServing={this.state.item.selectedServing}
-                servingSizes={this.state.item.servingSizes}
-                itemId={this.state.item.id}
-                handleQuantityChange={this.handleQuantityChange.bind(this)}
-                handleSizeChange={this.handleServingSizeChange.bind(this)}
-            />}
+                <div className="clearfix"></div>
 
-            {this.state.deleting && <ItemDeleteButton deleteItem={this.deleteUserFoodItem.bind(this)}/>}
-        </div>);
+                {this.state.adding && this.state.item &&
+                <ServingSize
+                    selectedServing={this.state.item.selectedServing}
+                    servingSizes={this.state.item.servingSizes}
+                    itemId={this.state.item.id}
+                    handleQuantityChange={this.handleQuantityChange.bind(this)}
+                    handleSizeChange={this.handleServingSizeChange.bind(this)}
+                />}
+
+                {this.state.deleting && <ItemDeleteButton deleteItem={this.deleteUserFoodItem.bind(this)}/>}
+            </div>);
     }
 }
 
-export default FoodItem;
+export default AddableFoodItem;

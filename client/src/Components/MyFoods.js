@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import FoodItem from "./FoodItem";
+import AddableFoodItem from "./AddableFoodItem";
 
 class MyFoods extends Component {
 
@@ -14,11 +14,9 @@ class MyFoods extends Component {
     render() {
         let foods;
         if (this.props.foods.length > 0) {
-            console.log("hey")
-            console.log(this.props.foods);
             foods = this.props.foods.map(food => {
                 return (
-                    <FoodItem
+                    <AddableFoodItem
                         key={food.id}
                         completedItem={food}
                         editMode={this.props.editMode}

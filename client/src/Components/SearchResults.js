@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import FoodItem from "./FoodItem";
+import AddableFoodItem from "./AddableFoodItem";
 
 class SearchResults extends Component {
     render() {
@@ -14,8 +14,8 @@ class SearchResults extends Component {
             if (this.props.searchResults) {
                 searchResults = this.props.searchResults.map(result => {
                     return (
-                        <FoodItem key={result.foodItemId}
-                                  item={result}/>
+                        <AddableFoodItem key={result.foodItemId}
+                                         item={result}/>
                     );
                 });
             }
