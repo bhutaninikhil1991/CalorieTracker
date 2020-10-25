@@ -73,19 +73,20 @@ class FoodView extends Component {
     }
 
     deleteUserFoodItem(foodItemId) {
-        fetch(`${SERVER_URL}` + "/api/foods/remove/" + foodItemId)
-            .then(response => {
-                if (response.ok) {
-                    let foodItem = this.state.myFoods.find(food => food.foodItemId === foodItemId);
-                    let foodItemIndex = this.state.myFoods.indexOf(foodItem);
-                    let newState = update(this.state, {
-                        myFoods: {$splice: [[foodItemIndex, 1]]}
-                    });
-                    this.setState(newState);
-                } else {
-                    alert("Food Item cannot be deleted");
-                }
-            });
+        fetch(`${SERVER_URL}` + "/api/foods/remove/" + foodItemId, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                let foodItem = this.state.myFoods.find(food => food.id === foodItemId);
+                let foodItemIndex = this.state.myFoods.indexOf(foodItem);
+                let newState = update(this.state, {
+                    myFoods: {$splice: [[foodItemIndex, 1]]}
+                });
+                this.setState(newState);
+            } else {
+                alert("Food Item cannot be deleted");
+            }
+        });
     }
 
     render() {

@@ -13,17 +13,19 @@ class AddableFoodItem extends Component {
             adding: false,
             deleting: false,
             loading: false,
-            item: this.props.completedItem ? this.props.completedItem : undefined
+            item: this.props.completedItem ? this.props.completedItem : undefined,
+            selectedServing: {
+                servingSize: this.props.selectedServing,
+                quantity: 1
+            }
         }
     }
 
     handleServingSizeChange(newServingSizeId) {
         let newServingSize = this.state.item.servingSizes.find(servingSize => servingSize.id === newServingSizeId);
         let newState = update(this.state, {
-            item: {
-                selectedServing: {
-                    servingSize: {$set: newServingSize}
-                }
+            selectedServing: {
+                servingSize: {$set: newServingSize}
             }
         });
         this.setState(newState);
@@ -31,10 +33,8 @@ class AddableFoodItem extends Component {
 
     handleQuantityChange(newServingQuantity) {
         let newState = update(this.state, {
-            item: {
-                selectedServing: {
-                    quantity: {$set: newServingQuantity}
-                }
+            selectedServing: {
+                quantity: {$set: newServingQuantity}
             }
         });
         this.setState(newState);
@@ -43,16 +43,20 @@ class AddableFoodItem extends Component {
     handleItemClick() {
         if (!this.props.editMode) {
             if (!this.state.adding && !this.state.item) {
-                this.setState({loading: true})
-                fetch(`${SERVER_URL}` + "/api/foods/" + this.props.item.id)
-                    .then((response) => response.json)
-                    .then(item => {
-                        let processedItem = this.setDefaultServingQuantity(item);
-                        this.setState({
-                            adding: true,
-                            item: processedItem,
-                            loading: false
-                        })
+                this.setState({loading: true});
+                fetch(`${SERVER_URL}` + "/api/foods?fdcId=" + this.props.item.id)
+                    .then((response) => {
+                        if (response.ok) {
+                            response.json()
+                                .then(item => {
+                                    let processedItem = item.success ? this.setDefaultServing(item.data[this.props.item.id]) : null;
+                                    this.setState({
+                                        adding: true,
+                                        item: processedItem,
+                                        loading: false
+                                    });
+                                });
+                        }
                     });
             } else {
                 this.setState(prevState => ({
@@ -67,14 +71,24 @@ class AddableFoodItem extends Component {
     }
 
     /**
+     * update selected serving object and
      * set initial serving quantity to 100 gram for foods
-     * whose only serving size is 1 gram
+     * whose only serving size is 1 gram for example in case of cookies
      * @param item
      * @returns {*}
      */
-    setDefaultServingQuantity(item) {
-        if (item.selectedServing.servingSize.label === 'g' && item.selectedServing.quantity === 1) {
-            item.selectedServing.quantity = 100;
+    setDefaultServing(item) {
+        //update selected serving
+        let newState = update(this.state, {
+            selectedServing: {
+                servingSize: {$set: item.servingSizes[0]},
+                quantity: {$set: 1}
+            }
+        });
+        this.setState(newState);
+        //update the quantity if the initial quantity is 1 gm
+        if (this.state.selectedServing.servingSize.servingLabel === 'g' && this.state.selectedServing.quantity === 1) {
+            this.state.selectedServing.quantity = 100;
         }
         return item;
     }
@@ -83,8 +97,7 @@ class AddableFoodItem extends Component {
         let item = this.state.item;
         let totalCalories, totalCarbohydrates, totalFat, totalProtein;
         totalCalories = totalCarbohydrates = totalFat = totalProtein = 0;
-        let selectedServing = item.servingSizes[0];
-        let servingSizeMultiplier = 1 * selectedServing.ratio;
+        let servingSizeMultiplier = this.state.selectedServing.quantity * this.state.selectedServing.servingSize.ratio;
 
         totalCalories += Math.round(item.calories * servingSizeMultiplier);
         totalCarbohydrates += Math.round(item.carbohydrates * servingSizeMultiplier);
@@ -146,7 +159,7 @@ class AddableFoodItem extends Component {
 
                 {this.state.adding && this.state.item &&
                 <ServingSize
-                    selectedServing={this.state.item.selectedServing}
+                    selectedServing={this.state.selectedServing}
                     servingSizes={this.state.item.servingSizes}
                     itemId={this.state.item.id}
                     handleQuantityChange={this.handleQuantityChange.bind(this)}

@@ -15,8 +15,8 @@ class CreateFoodView extends Component {
         e.preventDefault();
         const userId = 1;
         const servingSize = {
-            quantity: (e.target[1].value.split(' '))[0],
-            label: (e.target[1].value.split(' '))[1]
+            servingAmount: (e.target[1].value.split(' '))[0],
+            servingLabel: (e.target[1].value.split(' '))[1]
         }
         const newFoodItem = {
             name: e.target[0].value,
@@ -34,7 +34,7 @@ class CreateFoodView extends Component {
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {
-
+                window.location = "/add";
             } else {
                 alert("unable to add food item")
             }

@@ -20,28 +20,20 @@ class ServingSize extends Component {
         this.props.handleSizeChange(parseInt(e.target.value, 10))
     }
 
-    handleItemRemove() {
-        this.props.handleItemRemove();
-    }
-
     handleInputClick(e) {
         e.stopPropagation();
     }
 
-    getServingLabel(servingSize) {
-        return typeof servingSize.label === 'string' ? servingSize.label : servingSize.label.labelValue;
-    }
-
     render() {
         let servingUnitOptions;
-        if (this.props.servingSizes) {
+        if (this.props.servingSizes.length > 0) {
             servingUnitOptions = this.props.servingSizes.map(servingSize => {
-                return (<option key={servingSize.id} value={servingSize.id}>{this.getServingLabel.bind(this)}</option>);
+                return (<option key={servingSize.id} value={servingSize.id}>{servingSize.servingLabel}</option>);
             });
         }
 
         return (
-            <div id="ServingSelect">
+            <div className="ServingSelect animated fadeInDown" id="ServingSelect">
                 <input className="servingAmt" type="text" name="servingAmt" id="servingAmt" placeholder="1"
                        value={this.state.quantityValue} onChange={this.handleQuantityChange.bind(this)}
                        onClick={this.handleInputClick.bind(this)}/>

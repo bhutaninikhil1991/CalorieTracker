@@ -90,8 +90,8 @@ public class FoodService {
             JsonArray jsonArray = object.get("servingSizes").getAsJsonArray();
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject servingJson = jsonArray.get(i).getAsJsonObject();
-                String label = servingJson.get("label").getAsString();
-                double quantity = servingJson.get("quantity").getAsDouble();
+                String label = servingJson.get("servingLabel").getAsString();
+                double quantity = servingJson.get("servingAmount").getAsDouble();
                 ServingSize servingSize = new ServingSize(label, quantity);
                 foodItem.addServingSize(servingSize);
             }

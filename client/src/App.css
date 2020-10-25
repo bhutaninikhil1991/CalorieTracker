@@ -344,6 +344,11 @@ span.FoodsPanel__edit-foods--done-link:hover {
     cursor: pointer;
 }
 
+.AddableFoodItem .ServingSelect,
+.AddableFoodItem .ItemDeleteButton {
+    margin: 18px 0 0 74px;
+}
+
 .FoodsPanel__cancel-link {
     display: block;
     position: fixed;
@@ -384,10 +389,55 @@ span.FoodsPanel__edit-foods--done-link:hover {
     background-color: #039b1c;
 }
 
+#ServingSelect {
+    animation-duration: 0.7s;
+    -moz-animation-duration: 0.7s;
+}
+
 .addable-item__plus {
     float: left;
     width: 36px;
     margin-right: 38px;
     position: relative;
     top: 3px;
+}
+
+.ServingSelect input {
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    height: 36px;
+    width: 60px;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.ServingSelect input:focus {
+    border-color: #08ae23;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ServingSelect select {
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    height: 36px;
+    width: auto;
+    padding: 0 10px;
+    margin: 0 16px 0 8px;
+}
+
+.ServingSelect select:focus {
+    border-color: #08ae23;
+}
+
+.ItemDeleteButton {
+    cursor: pointer;
+    background: #c22317;
+    padding: 8px 24px;
+    border-radius: 6px;
+    color: white;
+    width: 40%;
+}
+
+.ItemDeleteButton:hover {
+    background-color: #B22015;
 }

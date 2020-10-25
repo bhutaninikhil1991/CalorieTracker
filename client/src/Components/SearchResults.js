@@ -11,11 +11,13 @@ class SearchResults extends Component {
                 </p>
             );
         } else {
-            if (this.props.searchResults) {
-                searchResults = this.props.searchResults.map(result => {
+            if (this.props.searchResults.length > 0) {
+                searchResults = this.props.searchResults.map(food => {
                     return (
-                        <AddableFoodItem key={result.foodItemId}
-                                         item={result}/>
+                        <AddableFoodItem
+                            selectedServing={food.servingSizes[0]}
+                            key={food.id}
+                            item={food}/>
                     );
                 });
             }

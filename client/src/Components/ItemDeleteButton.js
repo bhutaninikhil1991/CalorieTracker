@@ -9,7 +9,7 @@ class ItemDeleteButton extends Component {
 
     render() {
         return (
-            <div id="ItemDeleteButton" onClick={this.deleteItem.bind(this)}>
+            <div className="ItemDeleteButton animated fadeInDown" onClick={this.deleteItem.bind(this)}>
                 <span>Delete this item</span>
             </div>
         );

@@ -49,7 +49,7 @@ class FoodsPanel extends Component {
     }
 
     deleteUserFoods(foodItemId) {
-        this.props.deleteUserFoods(foodItemId);
+        this.props.deleteUserFoodItem(foodItemId);
     }
 
     render() {

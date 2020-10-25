@@ -17,6 +17,7 @@ class MyFoods extends Component {
             foods = this.props.foods.map(food => {
                 return (
                     <AddableFoodItem
+                        selectedServing={food.servingSizes[0]}
                         key={food.id}
                         completedItem={food}
                         editMode={this.props.editMode}
