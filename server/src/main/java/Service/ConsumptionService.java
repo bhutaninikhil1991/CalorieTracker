@@ -50,7 +50,7 @@ public class ConsumptionService {
      * @return Consumption
      */
     public Consumption saveConsumption(Consumption consumption) {
-        return consumptionRepository.save(consumption);
+        return consumptionRepository.saveOrUpdate(consumption);
     }
 
     /**
@@ -64,11 +64,11 @@ public class ConsumptionService {
             return null;
         Integer userId = consumptionObject.get("userId").getAsInt();
         Integer foodItemId = consumptionObject.get("foodItemId").getAsInt();
-        Integer servingSizeId = consumptionObject.get("servingSizeId").getAsInt();
+        Integer selectedServingSizeId = consumptionObject.get("selectedServingSizeId").getAsInt();
         double servingQuantity = consumptionObject.get("servingQuantity").getAsDouble();
         String stringDate = consumptionObject.get("consumptionDate").getAsString();
         LocalDate consumptionDate = LocalDate.parse(stringDate);
-        Consumption consumption = getConsumptionObject(userId, foodItemId, servingSizeId, servingQuantity, consumptionDate);
+        Consumption consumption = getConsumptionObject(userId, foodItemId, selectedServingSizeId, servingQuantity, consumptionDate);
         return consumption;
     }
 
@@ -84,11 +84,11 @@ public class ConsumptionService {
             return null;
         Consumption consumption = getConsumptionById(consumptionId);
         if (consumption != null) {
-            Integer servingSizeId = consumptionObject.get("servingSizeId").getAsInt();
+            Integer selectedServingSizeId = consumptionObject.get("selectedServingSizeId").getAsInt();
             double servingQuantity = consumptionObject.get("servingQuantity").getAsDouble();
-            ServingSize servingSize = foodItemRepository.findByServingId(servingSizeId).orElse(null);
+            ServingSize servingSize = foodItemRepository.findByServingId(consumption.getFoodItem().getId(), selectedServingSizeId).orElse(null);
             if (servingSize != null && servingQuantity > 0) {
-                consumption.setSelectedServingSize(servingSize);
+                consumption.setSelectedServing(servingSize);
                 consumption.setServingQuantity(servingQuantity);
                 consumption = saveConsumption(consumption);
             }
@@ -101,16 +101,16 @@ public class ConsumptionService {
      *
      * @param userId
      * @param foodItemId
-     * @param servingSizeId
+     * @param selectedServingSizeId
      * @param servingQuantity
      * @param date
      * @return Consumption
      */
-    private Consumption getConsumptionObject(int userId, int foodItemId, int servingSizeId, double servingQuantity, LocalDate date) {
+    private Consumption getConsumptionObject(int userId, int foodItemId, int selectedServingSizeId, double servingQuantity, LocalDate date) {
         Consumption consumption = new Consumption();
         User user = userRepository.findByUserId(userId).orElse(null);
         FoodItem foodItem = foodItemRepository.findById(foodItemId).orElse(null);
-        ServingSize servingSize = foodItemRepository.findByServingId(servingSizeId).orElse(null);
+        ServingSize servingSize = foodItemRepository.findByServingId(foodItem.getId(), selectedServingSizeId).orElse(null);
         //set user
         if (user != null)
             consumption.setUser(user);
@@ -119,7 +119,7 @@ public class ConsumptionService {
             consumption.setFoodItem(foodItem);
         //set serving size
         if (servingSize != null)
-            consumption.setSelectedServingSize(servingSize);
+            consumption.setSelectedServing(servingSize);
         // set serving quantity
         consumption.setServingQuantity(servingQuantity);
         //set consumption date

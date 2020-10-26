@@ -20,12 +20,20 @@ public class User {
     private String emailAddress;
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "creator",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore
     private List<FoodItem> userCreatedFoods;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "creator",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     @JsonIgnore
     private List<Consumption> userConsumptions;

@@ -26,8 +26,17 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
 
     @Override
     @ReadOnly
-    public Optional<ServingSize> findByServingId(@NotNull Integer id) {
-        return Optional.ofNullable(entityManager.find(ServingSize.class, id));
+    public Optional<ServingSize> findByServingId(@NotNull Integer foodItemId, @NotNull Integer servingSizeId) {
+        return Optional.ofNullable((ServingSize) entityManager.createQuery("SELECT s FROM ServingSize s WHERE s.foodItem.id =: foodItemId and s.id =: servingSizeId")
+                .setParameter("servingSizeId", servingSizeId)
+                .setParameter("foodItemId", foodItemId)
+                .getSingleResult());
+    }
+
+    @Override
+    @ReadOnly
+    public Optional<ServingSize> findByServingId(@NotNull Integer servingSizeId) {
+        return Optional.ofNullable(entityManager.find(ServingSize.class, servingSizeId));
     }
 
     @Override

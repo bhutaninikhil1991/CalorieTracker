@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -14,6 +16,10 @@ public class ServingSize {
     private String servingLabel;
     private double ratio;
     private double servingAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private FoodItem foodItem;
 
     /**
      * constructor
@@ -76,6 +82,24 @@ public class ServingSize {
      */
     public void setRatio(double ratio) {
         this.ratio = ratio;
+    }
+
+    /**
+     * getter for food Item
+     *
+     * @return Food Item
+     */
+    public FoodItem getFoodItem() {
+        return foodItem;
+    }
+
+    /**
+     * setter for Food Item
+     *
+     * @param item
+     */
+    public void setFoodItem(FoodItem item) {
+        this.foodItem = item;
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ConsumptionRepository {
     Optional<Consumption> findById(@NotNull Integer id);
 
-    Consumption save(@NotNull Consumption consumption);
+    Consumption saveOrUpdate(@NotNull Consumption consumption);
 
     void deleteById(@NotNull Integer id);
 }

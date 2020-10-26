@@ -1,6 +1,8 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class FoodItem {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
+    @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "food_item_id", referencedColumnName = "ID")
     private List<ServingSize> servingSizes = new ArrayList<>();
 
@@ -139,6 +142,7 @@ public class FoodItem {
     public void addServingSize(ServingSize servingSize) {
         ServingSize newServingSize = new ServingSize(servingSize.getServingLabel(), servingSize.getServingAmount());
         servingSizes.add(newServingSize);
+        servingSize.setFoodItem(this);
     }
 
     /**

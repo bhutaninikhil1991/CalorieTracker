@@ -26,8 +26,12 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
 
     @Override
     @Transactional
-    public Consumption save(@NotNull Consumption consumption) {
-        entityManager.persist(consumption);
+    public Consumption saveOrUpdate(@NotNull Consumption consumption) {
+        if (consumption.getId() > 0) {
+            entityManager.merge(consumption);
+        } else {
+            entityManager.persist(consumption);
+        }
         return consumption;
     }
 

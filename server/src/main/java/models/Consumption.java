@@ -22,7 +22,7 @@ public class Consumption {
     private FoodItem foodItem;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private ServingSize selectedServingSize;
+    private ServingSize selectedServing;
 
     private double servingQuantity;
 
@@ -58,8 +58,8 @@ public class Consumption {
      *
      * @param servingSize
      */
-    public void setSelectedServingSize(ServingSize servingSize) {
-        this.selectedServingSize = servingSize;
+    public void setSelectedServing(ServingSize servingSize) {
+        this.selectedServing = servingSize;
     }
 
     /**
@@ -112,8 +112,8 @@ public class Consumption {
      *
      * @return Serving Size
      */
-    public ServingSize getSelectedServingSize() {
-        return selectedServingSize;
+    public ServingSize getSelectedServing() {
+        return selectedServing;
     }
 
     /**
@@ -145,7 +145,7 @@ public class Consumption {
                 "id=" + id +
                 ", user=" + creator +
                 ", foodItem=" + foodItem +
-                ", servingSize=" + selectedServingSize +
+                ", servingSize=" + selectedServing +
                 ", servingQuantity=" + servingQuantity +
                 ", consumptionDate=" + consumptionDate +
                 '}';
