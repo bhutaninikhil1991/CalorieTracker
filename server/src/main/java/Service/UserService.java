@@ -1,10 +1,12 @@
 package Service;
 
 import Repository.UserRepository;
+import models.Consumption;
 import models.FoodItem;
 import models.User;
 
 import javax.inject.Singleton;
+import java.time.LocalDate;
 import java.util.List;
 
 @Singleton
@@ -60,5 +62,9 @@ public class UserService {
      */
     public List<FoodItem> getUserFoodItems(int userId) {
         return userRepository.getUserFoodItems(userId);
+    }
+
+    public List<Consumption> getUserConsumptions(int userId, LocalDate consumptionDate) {
+        return userRepository.getUserConsumptions(userId, consumptionDate);
     }
 }

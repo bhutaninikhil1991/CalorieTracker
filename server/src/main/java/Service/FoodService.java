@@ -44,8 +44,18 @@ public class FoodService {
      * @param foodId
      * @return FoodItem
      */
-    public FoodItem getFoodById(int foodId) {
+    public FoodItem getFoodItemById(int foodId) {
         return foodItemRepository.findById(foodId).orElse(null);
+    }
+
+    /**
+     * get serving size by Id
+     *
+     * @param servingSizeId
+     * @return
+     */
+    public ServingSize getServingSizeById(int servingSizeId) {
+        return foodItemRepository.findByServingId(servingSizeId).orElse(null);
     }
 
     /**

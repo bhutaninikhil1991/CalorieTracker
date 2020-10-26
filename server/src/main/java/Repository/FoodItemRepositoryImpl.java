@@ -2,6 +2,7 @@ package Repository;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import models.FoodItem;
+import models.ServingSize;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
@@ -21,6 +22,12 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
     @ReadOnly
     public Optional<FoodItem> findById(@NotNull Integer id) {
         return Optional.ofNullable(entityManager.find(FoodItem.class, id));
+    }
+
+    @Override
+    @ReadOnly
+    public Optional<ServingSize> findByServingId(@NotNull Integer id) {
+        return Optional.ofNullable(entityManager.find(ServingSize.class, id));
     }
 
     @Override

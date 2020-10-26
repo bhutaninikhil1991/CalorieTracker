@@ -25,6 +25,11 @@ public class User {
     @JsonIgnore
     private List<FoodItem> userCreatedFoods;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    @JsonIgnore
+    private List<Consumption> userConsumptions;
+
 
     /**
      * get user Id
@@ -51,6 +56,15 @@ public class User {
      */
     public List<FoodItem> getUserCreatedFoods() {
         return Collections.unmodifiableList(userCreatedFoods);
+    }
+
+    /**
+     * getter for user consumptions
+     *
+     * @return List<Consumption>
+     */
+    public List<Consumption> getUserConsumptions() {
+        return Collections.unmodifiableList(userConsumptions);
     }
 
     /**

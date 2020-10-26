@@ -1,5 +1,6 @@
 package controllers;
 
+import Service.ConsumptionService;
 import Service.FoodService;
 import Service.UserFoodService;
 import Service.UserService;
@@ -13,12 +14,14 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import models.Consumption;
 import models.FoodItem;
 import models.User;
 import utils.HelperUtils;
 import utils.USDAAPIClient;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -33,11 +36,14 @@ public class CalorieController {
     protected final UserService userService;
     @Inject
     protected final UserFoodService userFoodService;
+    @Inject
+    protected final ConsumptionService consumptionService;
 
-    public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService) {
+    public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService, ConsumptionService consumptionService) {
         this.foodService = foodService;
         this.userService = userService;
         this.userFoodService = userFoodService;
+        this.consumptionService = consumptionService;
     }
 
     /**
@@ -143,7 +149,6 @@ public class CalorieController {
     @Post("/foods/remove/{foodId}")
     public HTTPSingleResponse deleteUserCreatedFoodItem(int foodId) {
         HTTPSingleResponse response = new HTTPSingleResponse();
-        HashMap<String, Object> map = new HashMap<>();
         try {
             foodService.deleteFoodById(foodId);
             response.success = true;
@@ -180,6 +185,105 @@ public class CalorieController {
         }
         return response;
     }
+
+    /**
+     * create consumption
+     *
+     * @param object
+     */
+    @Post("/consumptions")
+    public HTTPSingleResponse CreateConsumption(@Body String object) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
+            Consumption consumption = consumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
+            // error occurred show appropriate error message
+            if (consumption == null) {
+                response.success = false;
+                response.errorMessage = "unable to parse json object";
+            } else {
+                Consumption savedItem = consumptionService.saveConsumption(consumption);
+                map.put(String.valueOf(savedItem.getId()), savedItem);
+                response.success = true;
+                response.data = map;
+            }
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to create new consumption";
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * delete consumption
+     *
+     * @param consumptionId
+     */
+    @Post("/consumptions/delete/{consumptionId}")
+    public HTTPSingleResponse deleteConsumption(int consumptionId) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        try {
+            consumptionService.deleteConsumptionById(consumptionId);
+            response.success = true;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to delete record for consumptionId:" + consumptionId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * get consumption
+     *
+     * @param userId
+     * @param consumptionDate
+     */
+    @Get("/consumptions")
+    public HTTPSingleResponse getConsumptions(int userId, String consumptionDate) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            LocalDate date = LocalDate.parse(consumptionDate);
+            List<Consumption> userConsumptions = userService.getUserConsumptions(userId, date);
+            map.put(String.valueOf(userId), userConsumptions);
+            response.success = true;
+            response.data = map;
+            if (userConsumptions.size() <= 0) {
+                response.errorMessage = "No records found";
+            }
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to fetch consumptions for userId:" + userId + " and consumptionDate:" + consumptionDate;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * update consumption
+     *
+     * @param consumptionId
+     */
+    @Post("/consumptions/update/{consumptionId}")
+    public HTTPSingleResponse updateConsumption(int consumptionId, @Body String object) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
+        Consumption consumption = consumptionService.updateConsumption(consumptionId, consumptionObject.getAsJsonObject("consumption"));
+        if (consumption == null) {
+            response.success = false;
+            response.errorMessage = "unable to update the record";
+        } else {
+            response.success = true;
+            map.put(String.valueOf(consumptionId), consumption);
+            response.data = map;
+        }
+        return response;
+    }
+
 
     /**
      * register user
