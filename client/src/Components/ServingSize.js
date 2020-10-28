@@ -24,6 +24,10 @@ class ServingSize extends Component {
         e.stopPropagation();
     }
 
+    handleItemRemove() {
+        this.props.handleItemRemove();
+    }
+
     render() {
         let servingUnitOptions;
         if (this.props.servingSizes.length > 0) {

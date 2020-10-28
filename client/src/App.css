@@ -441,3 +441,133 @@ span.FoodsPanel__edit-foods--done-link:hover {
 .ItemDeleteButton:hover {
     background-color: #B22015;
 }
+
+.Consumption {
+    margin-bottom: 60px;
+}
+
+.Consumption__header {
+    background-color: #eeeeee;
+    padding: 9px 28px;
+    border-radius: 8px;
+}
+
+.Consumption__header--name {
+    font-weight: bold;
+    font-size: 17px;
+    position: relative;
+    top: 2px;
+    display: inline-block;
+    width: 360px;
+}
+
+.Consumption__header--macros img {
+    max-height: 26px;
+    margin-right: 100px;
+}
+
+.Consumption__header--macros img:last-child {
+    margin: 0;
+}
+
+.Consumption__header--caloriesTotal {
+    font-size: 22px;
+    font-weight: bold;
+    float: right;
+    position: relative;
+    bottom: 2px;
+}
+
+.ConsumptionItem {
+    height: 90px;
+    padding: 0 30px;
+}
+
+.ConsumptionItem {
+    border-bottom: 1px solid #b5c4b7;
+}
+
+.ConsumptionItem__food {
+    width: 310px;
+    height: 90px;
+    display: table;
+    float: left;
+}
+
+.ConsumptionItem__food .ConsumptionItem__food--info {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.ConsumptionItem__food span {
+    display: block;
+    line-height: 20px;
+}
+
+.ConsumptionItem__food--quantity {
+    font-size: 13px;
+    color: #8b9b8b;
+}
+
+.ConsumptionItem__macros {
+    margin-left: 46px;
+}
+
+.ConsumptionItem__macros,
+.ConsumptionItem__calories {
+    position: relative;
+    top: 32px;
+}
+
+.ConsumptionItem__macros {
+    display: block;
+    float: left;
+    width: 400px;
+}
+
+.ConsumptionItem__macros span {
+    width: 33px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 98px;
+}
+
+.ConsumptionItem__macros span:last-child {
+    margin: 0;
+}
+
+.ConsumptionItem__calories {
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.ConsumptionItem__edit {
+    width: 18px;
+    margin-right: 38px;
+    position: relative;
+    top: 34px;
+    visibility: hidden;
+}
+
+.ConsumptionItem:hover .ConsumptionItem__edit {
+    visibility: visible;
+}
+
+.ConsumptionItem__edit
+.ConsumptionItem__save {
+    float: left;
+    cursor: pointer;
+}
+
+.ConsumptionItem__save {
+    width: 26px;
+    margin-right: 30px;
+    position: relative;
+    top: 34px;
+    right: 6px;
+}
+
+.ConsumptionItem.editing:hover {
+    background-color: #eeeeee
+}
