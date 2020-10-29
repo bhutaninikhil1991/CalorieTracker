@@ -63,9 +63,12 @@ public class ConsumptionService {
         if (consumptionObject == null)
             return null;
         Integer userId = consumptionObject.get("userId").getAsInt();
-        Integer foodItemId = consumptionObject.get("foodItemId").getAsInt();
-        Integer selectedServingSizeId = consumptionObject.get("selectedServingSizeId").getAsInt();
-        double servingQuantity = consumptionObject.get("servingQuantity").getAsDouble();
+        JsonObject item = consumptionObject.get("foodItem").getAsJsonObject();
+        Integer foodItemId = item.get("id").getAsInt();
+        JsonObject selectedServing = consumptionObject.get("selectedServing").getAsJsonObject();
+        JsonObject selectedServingSize = selectedServing.get("servingSize").getAsJsonObject();
+        Integer selectedServingSizeId = selectedServingSize.get("id").getAsInt();
+        double servingQuantity = selectedServing.get("quantity").getAsDouble();
         String stringDate = consumptionObject.get("consumptionDate").getAsString();
         LocalDate consumptionDate = LocalDate.parse(stringDate);
         Consumption consumption = getConsumptionObject(userId, foodItemId, selectedServingSizeId, servingQuantity, consumptionDate);

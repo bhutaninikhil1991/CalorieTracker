@@ -98,7 +98,7 @@ class FoodsPanel extends Component {
 
                 {
                     this.props.currentTab === 0 &&
-                    <SearchResults searchResults={this.props.searchResults}/>
+                    <SearchResults searchResults={this.props.searchResults} day={this.props.day}/>
                 }
                 {
                     this.props.currentTab === 1 &&
@@ -107,6 +107,7 @@ class FoodsPanel extends Component {
                         foods={this.props.myFoods}
                         deleteUserFoodItem={this.deleteUserFoods.bind(this)}
                         editMode={this.state.editMode}
+                        day={this.props.day}
                     />
                 }
             </div>

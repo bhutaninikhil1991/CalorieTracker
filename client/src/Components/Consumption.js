@@ -4,6 +4,7 @@ import carbsIcon from "../resources/bread-emoji.png";
 import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 import ConsumptionItem from "./ConsumptionItem";
+import AddFoodItem from "./AddFoodItem";
 
 class Consumption extends Component {
     constructor(props) {
@@ -127,6 +128,7 @@ class Consumption extends Component {
                     </span>
                 </div>
                 {consumptions}
+                <AddFoodItem day={this.props.day}/>
             </div>
         );
     }

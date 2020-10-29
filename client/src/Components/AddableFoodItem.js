@@ -116,6 +116,34 @@ class AddableFoodItem extends Component {
         this.props.deleteUserFoodItem(this.state.item.id);
     }
 
+    addConsumption() {
+        const userId = 1;
+        let consumption = {
+            foodItem: JSON.parse(JSON.stringify(this.state.item)),
+            selectedServing: JSON.parse(JSON.stringify(this.state.selectedServing)),
+            userId: userId,
+            consumptionDate: this.props.day
+        };
+
+        const reqObj = {
+            consumption: consumption
+        };
+
+        console.log(reqObj);
+
+        fetch(`${SERVER_URL}` + "/api/consumptions", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reqObj)
+        }).then(response => {
+            if (response.ok) {
+                window.location = "/?day=" + this.props.day;
+            } else {
+                alert("there was problem adding food to your log");
+            }
+        })
+    }
+
     render() {
         let foodName;
         if (this.props.completedItem) {
@@ -162,8 +190,10 @@ class AddableFoodItem extends Component {
                     selectedServing={this.state.selectedServing}
                     servingSizes={this.state.item.servingSizes}
                     itemId={this.state.item.id}
+                    handleAddClick={this.addConsumption.bind(this)}
                     handleQuantityChange={this.handleQuantityChange.bind(this)}
                     handleSizeChange={this.handleServingSizeChange.bind(this)}
+                    showAddRemoveButtons
                 />}
 
                 {this.state.deleting && <ItemDeleteButton deleteItem={this.deleteUserFoodItem.bind(this)}/>}

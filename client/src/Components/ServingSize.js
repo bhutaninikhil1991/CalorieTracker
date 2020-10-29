@@ -28,6 +28,11 @@ class ServingSize extends Component {
         this.props.handleItemRemove();
     }
 
+    handleAddClick(e) {
+        e.stopPropagation();
+        this.props.handleAddClick(this.props.itemId);
+    }
+
     render() {
         let servingUnitOptions;
         if (this.props.servingSizes.length > 0) {
@@ -46,6 +51,15 @@ class ServingSize extends Component {
                         onChange={this.handleSizeChange.bind(this)} onClick={this.handleInputClick.bind(this)}>
                     {servingUnitOptions}
                 </select>
+                {
+                    this.props.showAddRemoveButtons &&
+                    <button className="ServingSelect__add-button" onClick={this.handleAddClick.bind(this)}>Add</button>
+                }
+                {
+                    this.props.showAddRemoveButtons &&
+                    <button className="ServingSelect__remove-button" onClick={this.handleItemRemove.bind(this)}>Remove
+                    </button>
+                }
             </div>
         );
     };

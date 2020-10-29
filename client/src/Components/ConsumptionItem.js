@@ -78,6 +78,7 @@ class ConsumptionItem extends Component {
                     handleSizeChange={this.handleSizeChange.bind(this)}
                     handleItemRemove={this.handleItemRemove.bind(this)}
                     removingItem={this.props.removingItem}
+                    showAddRemoveButtons
                 />
                 }
             </div>

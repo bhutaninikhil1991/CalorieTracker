@@ -17,7 +17,9 @@ class SearchResults extends Component {
                         <AddableFoodItem
                             selectedServing={food.servingSizes[0]}
                             key={food.id}
-                            item={food}/>
+                            item={food}
+                            day={this.props.day}
+                        />
                     );
                 });
             }

@@ -14,15 +14,9 @@ function App() {
         <Router>
             <div className="App">
                 <Switch>
-                    <Route path="/">
-                        <DayView/>
-                    </Route>
-                    <Route path="/add">
-                        <FoodViewContainer/>
-                    </Route>
-                    <Route path="/createfood">
-                        <CreateFoodView/>
-                    </Route>
+                    <Route exact path="/" component={DayView}/>
+                    <Route exact path="/add" component={FoodViewContainer}/>
+                    <Route exact path="/createfood" component={CreateFoodView}/>
                 </Switch>
             </div>
         </Router>

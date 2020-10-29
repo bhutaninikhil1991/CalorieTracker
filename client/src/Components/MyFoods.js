@@ -22,6 +22,7 @@ class MyFoods extends Component {
                         completedItem={food}
                         editMode={this.props.editMode}
                         deleteUserFoodItem={this.deleteUserFoodItem.bind(this)}
+                        day={this.props.day}
                     />
                 );
             });

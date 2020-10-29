@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import FoodView from "./FoodView";
+import qs from "qs";
 
 class FoodViewContainer extends Component {
     constructor(props) {
@@ -10,7 +11,9 @@ class FoodViewContainer extends Component {
     }
 
     render() {
+        const qsParsed = qs.parse(document.location.search.slice(1));
         const tab = 0;
+        const day = qsParsed.day;
         if (tab && this.state.tab !== tab) {
             this.setState({tab});
         }
@@ -19,6 +22,7 @@ class FoodViewContainer extends Component {
             <div>
                 <FoodView
                     tab={this.state.tab}
+                    day={day}
                 />
             </div>
         );

@@ -20,13 +20,13 @@ class DayView extends Component {
     }
 
     getTodaysDate() {
-        return new Date().toISOString().split('T')[0];
+        return new Date("2020-10-26").toISOString().split('T')[0];
     }
 
     getConsumptions(day) {
         const userId = 1;
 
-        fetch(`${SERVER_URL}` + "/api/consumptions?userId=" + userId + "&consumptionDate=2020-10-26")
+        fetch(`${SERVER_URL}` + "/api/consumptions?userId=" + userId + "&consumptionDate=" + day)
             .then((response) => {
                 if (response.ok) {
                     return response.json()

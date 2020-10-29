@@ -103,6 +103,7 @@ class FoodView extends Component {
                     myFoods={this.state.myFoods}
                     deleteUserFoodItem={this.deleteUserFoodItem.bind(this)}
                     loading={this.state.loading}
+                    day={this.props.day}
                 />
             </div>
         )

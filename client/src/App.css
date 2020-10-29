@@ -569,5 +569,75 @@ span.FoodsPanel__edit-foods--done-link:hover {
 }
 
 .ConsumptionItem.editing:hover {
-    background-color: #eeeeee
+    background-color: white;
 }
+
+.ConsumptionItem.editing {
+    height: 150px;
+    border-bottom-color: #08ae23;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.AddFoodItem {
+    border-bottom: 1px solid #b5c4b7;
+    padding: 18px 30px 18px 23px;
+}
+
+.AddFoodItem__link {
+    color: #003300;
+}
+
+.AddFoodItem__link:hover {
+    color: #08ae23;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.AddFoodItem img {
+    width: 25px;
+    margin-right: 40px;
+}
+
+.AddFoodItem span {
+    position: relative;
+    top: 1px;
+}
+
+.ServingSelect__add-button,
+.ServingSelect__remove-button {
+    background-color: #08ae23;
+    color: white;
+    padding: 6px 20px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+.ServingSelect__remove-button {
+    background-color: white;
+    color: #c22317;
+    text-decoration: underline;
+}
+
+.ServingSelect__remove-button:focus {
+    outline: none;
+}
+
+.ServingSelect__add-button {
+    background-color: #039b1c;
+}
+
+.ServingSelect__remove-button:hover {
+    text-decoration: none;
+}
+
+.AddableFoodItem .ServingSelect .ServingSelect__remove-button {
+    display: none;
+}
+
+.ConsumptionItem .ServingSelect .ServingSelect__add-button {
+    display: none;
+}
+
+
