@@ -36,6 +36,23 @@ public class Consumption {
     }
 
     /**
+     * parameterized constructor
+     *
+     * @param user
+     * @param foodItem
+     * @param selectedServing
+     * @param servingQuantity
+     * @param consumptionDate
+     */
+    public Consumption(User user, FoodItem foodItem, ServingSize selectedServing, double servingQuantity, LocalDate consumptionDate) {
+        this.creator = user;
+        this.foodItem = foodItem;
+        this.selectedServing = selectedServing;
+        this.servingQuantity = servingQuantity;
+        this.consumptionDate = consumptionDate;
+    }
+
+    /**
      * set user
      *
      * @param user

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface FoodItemRepository {
     Optional<FoodItem> findById(@NotNull Integer id);
 
-    Optional<ServingSize> findByServingId(@NotNull Integer foodItemId, @NotNull Integer servingSizeId);
+    Optional<Integer> findServingSizeId(@NotNull FoodItem foodItem, @NotNull String servingLabel);
 
     Optional<ServingSize> findByServingId(@NotNull Integer servingSizeId);
 

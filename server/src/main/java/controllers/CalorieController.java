@@ -1,9 +1,6 @@
 package controllers;
 
-import Service.ConsumptionService;
-import Service.FoodService;
-import Service.UserFoodService;
-import Service.UserService;
+import Service.*;
 import calorieapp.HTTPSingleResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -38,12 +35,15 @@ public class CalorieController {
     protected final UserFoodService userFoodService;
     @Inject
     protected final ConsumptionService consumptionService;
+    @Inject
+    protected final UserFoodConsumptionService userFoodConsumptionService;
 
-    public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService, ConsumptionService consumptionService) {
+    public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService, ConsumptionService consumptionService, UserFoodConsumptionService userFoodConsumptionService) {
         this.foodService = foodService;
         this.userService = userService;
         this.userFoodService = userFoodService;
         this.consumptionService = consumptionService;
+        this.userFoodConsumptionService = userFoodConsumptionService;
     }
 
     /**
@@ -197,13 +197,13 @@ public class CalorieController {
         HashMap<String, Object> map = new HashMap<>();
         try {
             JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
-            Consumption consumption = consumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
+            Consumption consumption = userFoodConsumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
             // error occurred show appropriate error message
             if (consumption == null) {
                 response.success = false;
                 response.errorMessage = "unable to parse json object";
             } else {
-                Consumption savedItem = consumptionService.saveConsumption(consumption);
+                Consumption savedItem = consumptionService.saveOrUpdateConsumption(consumption);
                 map.put(String.valueOf(savedItem.getId()), savedItem);
                 response.success = true;
                 response.data = map;
@@ -264,21 +264,20 @@ public class CalorieController {
 
     /**
      * update consumption
-     *
-     * @param consumptionId
      */
-    @Post("/consumptions/update/{consumptionId}")
-    public HTTPSingleResponse updateConsumption(int consumptionId, @Body String object) {
+    @Post("/consumptions/update")
+    public HTTPSingleResponse updateConsumption(@Body String object) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
-        Consumption consumption = consumptionService.updateConsumption(consumptionId, consumptionObject.getAsJsonObject("consumption"));
+        Consumption consumption = userFoodConsumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
         if (consumption == null) {
             response.success = false;
             response.errorMessage = "unable to update the record";
         } else {
+            Consumption savedItem = consumptionService.saveOrUpdateConsumption(consumption);
             response.success = true;
-            map.put(String.valueOf(consumptionId), consumption);
+            map.put(String.valueOf(consumption.getId()), savedItem);
             response.data = map;
         }
         return response;

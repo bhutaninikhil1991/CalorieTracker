@@ -59,14 +59,14 @@ public class FoodService {
     }
 
     /**
-     * get serving size by Food Item Id and Serving Size Id
+     * find serving size by serving label
      *
-     * @param foodItemId
-     * @param servingSizeId
-     * @return Serving Size
+     * @param foodItem
+     * @param servingLabel
+     * @return
      */
-    public ServingSize getServingSizeById(int foodItemId, int servingSizeId) {
-        return foodItemRepository.findByServingId(foodItemId, servingSizeId).orElse(null);
+    public Integer findServingSizeId(FoodItem foodItem, String servingLabel) {
+        return foodItemRepository.findServingSizeId(foodItem, servingLabel).orElse(null);
     }
 
     /**

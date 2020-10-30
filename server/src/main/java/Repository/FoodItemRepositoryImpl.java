@@ -26,11 +26,12 @@ public class FoodItemRepositoryImpl implements FoodItemRepository {
 
     @Override
     @ReadOnly
-    public Optional<ServingSize> findByServingId(@NotNull Integer foodItemId, @NotNull Integer servingSizeId) {
-        return Optional.ofNullable((ServingSize) entityManager.createQuery("SELECT s FROM ServingSize s WHERE s.foodItem.id =: foodItemId and s.id =: servingSizeId")
-                .setParameter("servingSizeId", servingSizeId)
-                .setParameter("foodItemId", foodItemId)
-                .getSingleResult());
+    public Optional<Integer> findServingSizeId(@NotNull FoodItem foodItem, @NotNull String servingLabel) {
+        ServingSize servingSize = (ServingSize) entityManager.createQuery("SELECT s FROM ServingSize s WHERE s.foodItem.id =: foodItemId and s.servingLabel =: servingLabel")
+                .setParameter("servingLabel", servingLabel)
+                .setParameter("foodItemId", foodItem.getId())
+                .getSingleResult();
+        return Optional.ofNullable(servingSize.getId());
     }
 
     @Override

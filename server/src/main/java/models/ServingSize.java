@@ -34,6 +34,21 @@ public class ServingSize {
     }
 
     /**
+     * parameterized constructor
+     *
+     * @param id
+     * @param servingLabel
+     * @param servingAmount
+     * @param ratio
+     */
+    public ServingSize(Integer id, String servingLabel, double servingAmount, double ratio) {
+        this.id = id;
+        this.servingLabel = servingLabel;
+        this.servingAmount = servingAmount;
+        this.ratio = ratio;
+    }
+
+    /**
      * default constructor
      */
     public ServingSize() {

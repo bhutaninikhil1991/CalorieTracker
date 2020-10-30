@@ -85,14 +85,22 @@ class DayView extends Component {
      * @param updatedConsumption
      */
     handleServingUpdate(updatedConsumption) {
+        const userId = 1;
         let consumption = this.state.items.find(consumption => consumption.id === updatedConsumption.id)
         let consumptionIndex = this.state.items.indexOf(consumption);
 
-        const reqObj = {
-            consumption: updatedConsumption
+        let updatedConsumptionObj = JSON.parse(JSON.stringify(updatedConsumption));
+        updatedConsumptionObj.userId = userId;
+        updatedConsumptionObj.selectedServing = {
+            "servingSize": updatedConsumption.selectedServing,
+            "quantity": updatedConsumption.servingQuantity
         }
 
-        fetch(`${SERVER_URL}/api/consumptions/update/${updatedConsumption.id}`, {
+        const reqObj = {
+            consumption: updatedConsumptionObj
+        }
+
+        fetch(`${SERVER_URL}/api/consumptions/update`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(reqObj)
