@@ -5,12 +5,14 @@ import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 import {Link} from "react-router-dom";
 
-
+/**
+ * class allows user to create food items
+ */
 class CreateFoodView extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+    /**
+     * creates new food Item for the user
+     * @param e
+     */
     handleSubmit(e) {
         e.preventDefault();
         const userId = 1;
@@ -28,7 +30,7 @@ class CreateFoodView extends Component {
         const reqObj = {
             foodItem: newFoodItem
         };
-        fetch(`${SERVER_URL}` + "/api/foods/" + userId, {
+        fetch(`${SERVER_URL}/api/foods/${userId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(reqObj)

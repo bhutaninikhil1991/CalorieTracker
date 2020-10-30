@@ -6,9 +6,15 @@ import carbsIcon from "../resources/bread-emoji.png";
 import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 
-
+/**
+ * class responsible for creating panel
+ */
 class FoodsPanel extends Component {
 
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -16,6 +22,10 @@ class FoodsPanel extends Component {
         }
     }
 
+    /**
+     * handle switch between panel events
+     * @param e
+     */
     handleSwitchTab(e) {
         let tab = e.target.attributes.class.value;
         if (!tab.includes(' ')) {
@@ -30,24 +40,38 @@ class FoodsPanel extends Component {
         }
     }
 
+    /**
+     * whether to display table headers or not
+     * @returns {boolean}
+     */
     shouldDisplayPanelHeader() {
-        if ((this.props.currentTab == 0 && this.props.searchError)
-            || (this.props.currentTab == 1 && !this.props.myFoods.length)) {
+        if ((this.props.currentTab === 0 && this.props.searchError)
+            || (this.props.currentTab === 1 && !this.props.myFoods.length)) {
             return false;
         }
         return true;
     }
 
+    /**
+     * to set the edit state depending on user is editing or not
+     */
     editMode() {
         this.setState(prevState => ({
             editMode: !prevState.editMode
         }));
     }
 
+    /**
+     * handle get user food items event
+     */
     getUserFoods() {
         this.props.getUserFoods();
     }
 
+    /**
+     * handle delete user food items event
+     * @param foodItemId
+     */
     deleteUserFoods(foodItemId) {
         this.props.deleteUserFoodItem(foodItemId);
     }

@@ -6,7 +6,14 @@ import ItemDeleteButton from "./ItemDeleteButton";
 import plusIcon from "../resources/plus-icon.png";
 import trashIcon from "../resources/trash-icon.png";
 
+/**
+ * food item class
+ */
 class AddableFoodItem extends Component {
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -21,6 +28,10 @@ class AddableFoodItem extends Component {
         }
     }
 
+    /**
+     * handle serving size change
+     * @param newServingSizeId
+     */
     handleServingSizeChange(newServingSizeId) {
         let newServingSize = this.state.item.servingSizes.find(servingSize => servingSize.id === newServingSizeId);
         let newState = update(this.state, {
@@ -31,6 +42,10 @@ class AddableFoodItem extends Component {
         this.setState(newState);
     }
 
+    /**
+     * handle serving quantity change
+     * @param newServingQuantity
+     */
     handleQuantityChange(newServingQuantity) {
         let newState = update(this.state, {
             selectedServing: {
@@ -40,11 +55,14 @@ class AddableFoodItem extends Component {
         this.setState(newState);
     }
 
+    /**
+     * get food Items by there fdcId
+     */
     handleItemClick() {
         if (!this.props.editMode) {
             if (!this.state.adding && !this.state.item) {
                 this.setState({loading: true});
-                fetch(`${SERVER_URL}` + "/api/foods?fdcId=" + this.props.item.id)
+                fetch(`${SERVER_URL}/api/foods?fdcId=${this.props.item.id}`)
                     .then((response) => {
                         if (response.ok) {
                             response.json()
@@ -71,9 +89,7 @@ class AddableFoodItem extends Component {
     }
 
     /**
-     * update selected serving object and
-     * set initial serving quantity to 100 gram for foods
-     * whose only serving size is 1 gram for example in case of cookies
+     * set default values for initial serving
      * @param item
      * @returns {*}
      */
@@ -86,13 +102,13 @@ class AddableFoodItem extends Component {
             }
         });
         this.setState(newState);
-        //update the quantity if the initial quantity is 1 gm
-        if (this.state.selectedServing.servingSize.servingLabel === 'g' && this.state.selectedServing.quantity === 1) {
-            this.state.selectedServing.quantity = 100;
-        }
         return item;
     }
 
+    /**
+     * calculate total
+     * @returns {{carbohydrates: number, protein: number, fat: number, calories: number}}
+     */
     calculateItemTotals() {
         let item = this.state.item;
         let totalCalories, totalCarbohydrates, totalFat, totalProtein;
@@ -112,10 +128,16 @@ class AddableFoodItem extends Component {
         };
     }
 
+    /**
+     * delete user created food item
+     */
     deleteUserFoodItem() {
         this.props.deleteUserFoodItem(this.state.item.id);
     }
 
+    /**
+     * add consumption
+     */
     addConsumption() {
         const userId = 1;
         let consumption = {
@@ -129,7 +151,7 @@ class AddableFoodItem extends Component {
             consumption: consumption
         };
 
-        fetch(`${SERVER_URL}` + "/api/consumptions", {
+        fetch(`${SERVER_URL}/api/consumptions`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(reqObj)

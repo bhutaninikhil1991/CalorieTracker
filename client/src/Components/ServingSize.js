@@ -1,7 +1,14 @@
 import React, {Component} from "react";
 
+/**
+ * serving size class
+ */
 class ServingSize extends Component {
 
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -9,6 +16,10 @@ class ServingSize extends Component {
         }
     }
 
+    /**
+     * handle serving quantity change event
+     * @param e
+     */
     handleQuantityChange(e) {
         this.setState({
             quantityValue: e.target.value
@@ -16,18 +27,33 @@ class ServingSize extends Component {
         this.props.handleQuantityChange(e.target.value);
     }
 
+    /**
+     * handle serving size change event
+     * @param e
+     */
     handleSizeChange(e) {
         this.props.handleSizeChange(parseInt(e.target.value, 10))
     }
 
+    /**
+     * handle input click event
+     * @param e
+     */
     handleInputClick(e) {
         e.stopPropagation();
     }
 
+    /**
+     * handle removing serving size event
+     */
     handleItemRemove() {
         this.props.handleItemRemove();
     }
 
+    /**
+     * handle adding serving size event
+     * @param e
+     */
     handleAddClick(e) {
         e.stopPropagation();
         this.props.handleAddClick(this.props.itemId);

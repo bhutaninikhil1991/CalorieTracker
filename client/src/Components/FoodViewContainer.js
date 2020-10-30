@@ -2,7 +2,14 @@ import React, {Component} from "react";
 import FoodView from "./FoodView";
 import qs from "qs";
 
+/**
+ * food view container class
+ */
 class FoodViewContainer extends Component {
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {

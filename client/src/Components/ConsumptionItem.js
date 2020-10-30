@@ -3,7 +3,14 @@ import ServingSize from "./ServingSize";
 import editIcon from "../resources/edit-icon.png";
 import checkIcon from "../resources/checkmark-icon.png";
 
+/**
+ * consumption Item class
+ */
 class ConsumptionItem extends Component {
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -16,12 +23,18 @@ class ConsumptionItem extends Component {
 
     }
 
+    /**
+     * handle consumption edit event to edit the consumption Item
+     */
     handleEditClick() {
         this.setState(prevState => ({
             editMode: !prevState.editMode
         }));
     }
 
+    /**
+     * handle consumption save event after the changes have been made to the consumption Item
+     */
     handleSaveClick() {
         this.setState(prevState => ({
             editMode: !prevState.editMode
@@ -29,14 +42,25 @@ class ConsumptionItem extends Component {
         this.props.handleNewServingSave();
     }
 
+    /**
+     * handle serving size change event
+     * @param servingSizeId
+     */
     handleSizeChange(servingSizeId) {
         this.props.handleSizeChange(servingSizeId, this.props.consumptionId);
     }
 
+    /**
+     * handle quantity change event
+     * @param quantity
+     */
     handleQuantityChange(quantity) {
         this.props.handleQuantityChange(quantity, this.props.consumptionId);
     }
 
+    /**
+     * handle delete consumption record event
+     */
     handleItemRemove() {
         this.props.handleItemRemove(this.props.consumptionId);
     }

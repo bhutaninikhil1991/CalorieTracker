@@ -1,12 +1,22 @@
 import React, {Component} from 'react'
 import AddableFoodItem from "./AddableFoodItem";
 
+/**
+ * class responsible for viewing user created food items
+ */
 class MyFoods extends Component {
 
+    /**
+     * initialization of view
+     */
     componentDidMount() {
         this.props.getFoods();
     }
 
+    /**
+     * handle delete user food item event
+     * @param foodItemId
+     */
     deleteUserFoodItem(foodItemId) {
         this.props.deleteUserFoodItem(foodItemId);
     }

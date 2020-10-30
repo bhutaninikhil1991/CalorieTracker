@@ -1,7 +1,14 @@
 import React, {Component} from "react";
 
+/**
+ * class responsible for searching the food item
+ */
 class SearchFood extends Component {
 
+    /**
+     * handle search change event
+     * @param e
+     */
     handleSearchChange(e) {
         this.props.handleSearchChange(e.target.value);
     }

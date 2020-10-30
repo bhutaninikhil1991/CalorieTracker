@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import AddableFoodItem from "./AddableFoodItem";
 
+/**
+ * class responsible for showing the search results-
+ */
 class SearchResults extends Component {
     render() {
         let searchResults;

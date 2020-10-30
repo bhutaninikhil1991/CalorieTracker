@@ -1,7 +1,14 @@
 import React, {Component} from "react";
 
+/**
+ * class responsible for deleting food item
+ */
 class ItemDeleteButton extends Component {
 
+    /**
+     * handle delete food item event
+     * @param e
+     */
     deleteItem(e) {
         e.stopPropagation();
         this.props.deleteItem();

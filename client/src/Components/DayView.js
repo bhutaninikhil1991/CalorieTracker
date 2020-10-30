@@ -3,7 +3,14 @@ import {SERVER_URL} from "../config";
 import update from "immutability-helper";
 import Consumption from "./Consumption";
 
+/**
+ * class displays a particular consumption date view
+ */
 class DayView extends Component {
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -14,19 +21,30 @@ class DayView extends Component {
         }
     }
 
+    /**
+     * initialize the view
+     */
     componentDidMount() {
         document.title = "Calorie App";
         this.getConsumptions(this.state.selectedDay);
     }
 
+    /**
+     * get today's date
+     * @returns {string}
+     */
     getTodaysDate() {
         return new Date("2020-10-26").toISOString().split('T')[0];
     }
 
+    /**
+     * get users consumptions
+     * @param day
+     */
     getConsumptions(day) {
         const userId = 1;
 
-        fetch(`${SERVER_URL}` + "/api/consumptions?userId=" + userId + "&consumptionDate=" + day)
+        fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${day}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json()
@@ -42,8 +60,12 @@ class DayView extends Component {
             });
     }
 
+    /**
+     * delete user consumption
+     * @param consumptionId
+     */
     removeItem(consumptionId) {
-        fetch(`${SERVER_URL}` + "/api/consumptions/delete/" + consumptionId, {method: 'POST'})
+        fetch(`${SERVER_URL}/api/consumptions/delete/${consumptionId}`, {method: 'POST'})
             .then(response => {
                 if (response.ok) {
                     let item = this.state.items.find(consumption => consumption.id === consumptionId);
@@ -58,6 +80,10 @@ class DayView extends Component {
             });
     }
 
+    /**
+     * update user consumption
+     * @param updatedConsumption
+     */
     handleServingUpdate(updatedConsumption) {
         let consumption = this.state.items.find(consumption => consumption.id === updatedConsumption.id)
         let consumptionIndex = this.state.items.indexOf(consumption);
@@ -66,7 +92,7 @@ class DayView extends Component {
             consumption: updatedConsumption
         }
 
-        fetch(`${SERVER_URL}` + "/api/consumptions/update/" + updatedConsumption.id, {
+        fetch(`${SERVER_URL}/api/consumptions/update/${updatedConsumption.id}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(reqObj)

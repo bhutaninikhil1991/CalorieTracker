@@ -4,7 +4,14 @@ import {SERVER_URL} from "../config";
 import update from "immutability-helper"
 import FoodsPanel from "./FoodsPanel";
 
+/**
+ * food view class
+ */
 class FoodView extends Component {
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -17,6 +24,11 @@ class FoodView extends Component {
         }
     }
 
+    /**
+     * to update the state whenever the value of the property changes
+     * @param nextProps
+     * @param nextContext
+     */
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.tab) {
             if (nextProps.tab !== this.state.foodsPanelTab) {
@@ -29,10 +41,18 @@ class FoodView extends Component {
         }
     }
 
+    /**
+     * set update the tab numbers when tabs are switched
+     * @param tabNumber
+     */
     switchTabs(tabNumber) {
         this.setState({foodsPanelTab: tabNumber})
     }
 
+    /**
+     * handle foodItem search event
+     * @param foodItem
+     */
     // to handle search change
     handleSearchChange(foodItem) {
         this.setState({
@@ -43,9 +63,13 @@ class FoodView extends Component {
         this.getSearchResults(foodItem)
     }
 
+    /**
+     * get food item search results
+     * @param searchFoodItem
+     */
     // to get search results
     getSearchResults(searchFoodItem) {
-        fetch(`${SERVER_URL}` + "/api/foods/search?query=" + searchFoodItem)
+        fetch(`${SERVER_URL}/api/foods/search?query=${searchFoodItem}`)
             .then((response) => {
                 if (response.ok) {
                     response.json()
@@ -63,17 +87,24 @@ class FoodView extends Component {
             });
     }
 
+    /**
+     * get user created food items
+     */
     getUserFoods() {
         const userId = 1;
-        fetch(`${SERVER_URL}` + "/api/foods/user?userId=" + userId)
+        fetch(`${SERVER_URL}/api/foods/user?userId=${userId}`)
             .then((response) => response.json())
             .then(results => {
                 this.setState({myFoods: results.success ? results.data[userId] : []})
             });
     }
 
+    /**
+     * delete user created food items
+     * @param foodItemId
+     */
     deleteUserFoodItem(foodItemId) {
-        fetch(`${SERVER_URL}` + "/api/foods/remove/" + foodItemId, {
+        fetch(`${SERVER_URL}/api/foods/remove/${foodItemId}`, {
             method: 'POST'
         }).then(response => {
             if (response.ok) {
