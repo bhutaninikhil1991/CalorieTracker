@@ -87,7 +87,8 @@ public class ConsumptionService {
             return null;
         Consumption consumption = getConsumptionById(consumptionId);
         if (consumption != null) {
-            Integer selectedServingSizeId = consumptionObject.get("selectedServingSizeId").getAsInt();
+            JsonObject selectedServing = consumptionObject.get("selectedServing").getAsJsonObject();
+            Integer selectedServingSizeId = selectedServing.get("id").getAsInt();
             double servingQuantity = consumptionObject.get("servingQuantity").getAsDouble();
             ServingSize servingSize = foodItemRepository.findByServingId(consumption.getFoodItem().getId(), selectedServingSizeId).orElse(null);
             if (servingSize != null && servingQuantity > 0) {

@@ -22,7 +22,7 @@ class Consumption extends Component {
     handleSizeChange(newServingSizeId, consumptionId) {
         let consumption = this.state.items.find(item => item.id === consumptionId);
         let consumptionIndex = this.state.items.indexOf(consumption);
-        let newServingSize = consumption.servingSizes.find(servingSize => servingSize.id === newServingSizeId);
+        let newServingSize = consumption.foodItem.servingSizes.find(servingSize => servingSize.id === newServingSizeId);
 
         let newState = update(this.state, {
             items: {
@@ -30,7 +30,7 @@ class Consumption extends Component {
                     selectedServing: {$set: newServingSize}
                 }
             },
-            consumptionId: consumptionId
+            consumptionId: {$set: consumptionId}
         });
         this.setState(newState);
     }
@@ -38,14 +38,13 @@ class Consumption extends Component {
     handleQuantityChange(newServingQuantity, consumptionId) {
         let consumption = this.state.items.find(item => item.id === consumptionId);
         let consumptionIndex = this.state.items.indexOf(consumption);
-
         let newState = update(this.state, {
             items: {
                 [consumptionIndex]: {
                     servingQuantity: {$set: newServingQuantity}
                 }
             },
-            consumptionId: consumptionId
+            consumptionId: {$set: consumptionId}
         });
         this.setState(newState);
     }

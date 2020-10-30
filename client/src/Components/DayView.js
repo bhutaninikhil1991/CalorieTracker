@@ -43,7 +43,7 @@ class DayView extends Component {
     }
 
     removeItem(consumptionId) {
-        fetch(`${SERVER_URL}` + "/api/consumptions/delete" + consumptionId, {method: 'POST'})
+        fetch(`${SERVER_URL}` + "/api/consumptions/delete/" + consumptionId, {method: 'POST'})
             .then(response => {
                 if (response.ok) {
                     let item = this.state.items.find(consumption => consumption.id === consumptionId);
@@ -61,9 +61,15 @@ class DayView extends Component {
     handleServingUpdate(updatedConsumption) {
         let consumption = this.state.items.find(consumption => consumption.id === updatedConsumption.id)
         let consumptionIndex = this.state.items.indexOf(consumption);
-        fetch(`${SERVER_URL}` + "/api/consumptions/update" + updatedConsumption.id, {
+
+        const reqObj = {
+            consumption: updatedConsumption
+        }
+
+        fetch(`${SERVER_URL}` + "/api/consumptions/update/" + updatedConsumption.id, {
             method: 'POST',
-            body: JSON.stringify(updatedConsumption)
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {
                 let newState = update(this.state, {
@@ -77,16 +83,6 @@ class DayView extends Component {
             }
         });
     }
-
-
-    changeSelectedDay(newDay) {
-        this.setState({
-            selectedDay: newDay,
-        }, () => {
-            this.getConsumptions(newDay);
-        });
-    }
-
 
     render() {
         return (

@@ -129,8 +129,6 @@ class AddableFoodItem extends Component {
             consumption: consumption
         };
 
-        console.log(reqObj);
-
         fetch(`${SERVER_URL}` + "/api/consumptions", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
