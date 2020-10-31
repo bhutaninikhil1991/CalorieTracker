@@ -7,7 +7,7 @@ import plusIcon from "../resources/plus-icon.png";
  */
 class AddFoodItem extends Component {
     render() {
-        let day = this.props.day;
+        let day = this.props.day.toISOString().split('T')[0];
         return (
             <Link to={"/add?day=" + day} className="AddFoodItem__link">
                 <div className="AddFoodItem">

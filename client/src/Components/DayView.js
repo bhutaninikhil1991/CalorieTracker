@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {SERVER_URL} from "../config";
 import update from "immutability-helper";
 import Consumption from "./Consumption";
+import DaySelect from "./DaySelect";
 
 /**
  * class displays a particular consumption date view
@@ -31,10 +32,10 @@ class DayView extends Component {
 
     /**
      * get today's date
-     * @returns {string}
+     * @returns {Date}
      */
     getTodaysDate() {
-        return new Date("2020-10-26").toISOString().split('T')[0];
+        return new Date(Date.now() - (60000 * new Date().getTimezoneOffset()));
     }
 
     /**
@@ -43,14 +44,14 @@ class DayView extends Component {
      */
     getConsumptions(day) {
         const userId = 1;
-
-        fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${day}`)
+        let date = day.toISOString().split('T')[0];
+        fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${date}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json()
                         .then(results => {
                             this.setState({
-                                items: results.success ? results.data[userId] : [],
+                                items: results.success && results.data !== undefined ? results.data[userId] : [],
                                 loadingItems: false
                             });
                         });
@@ -118,9 +119,26 @@ class DayView extends Component {
         });
     }
 
+    /**
+     * handle selected day change event
+     * @param newDay
+     */
+    changeSelectedDay(newDay) {
+        this.setState({
+            selectedDay: newDay
+        }, () => {
+            this.getConsumptions(newDay);
+        })
+    }
+
     render() {
         return (
             <div className="DayView content-container">
+                <DaySelect
+                    selectedDay={this.state.selectedDay}
+                    changeSelectedDay={this.changeSelectedDay.bind(this)}
+                    todaysDate={this.getTodaysDate()}/>
+                <div className="clearfix"/>
                 <Consumption
                     items={this.state.items}
                     handleServingUpdate={this.handleServingUpdate.bind(this)}

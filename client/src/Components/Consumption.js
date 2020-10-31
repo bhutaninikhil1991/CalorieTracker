@@ -5,6 +5,7 @@ import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 import ConsumptionItem from "./ConsumptionItem";
 import AddFoodItem from "./AddFoodItem";
+import calorieIcon from "../resources/calories.png";
 
 /**
  * consumption class
@@ -156,7 +157,7 @@ class Consumption extends Component {
                         <img src={proteinIcon} alt="protein" title="protein"/>
                     </span>
                     <span className="Consumption__header--caloriesTotal">
-                        {itemTotals.calories ? itemTotals.calories : '--'}
+                        {itemTotals.calories ? itemTotals.calories : <img src={calorieIcon} alt="calories" title="calories"/>}
                     </span>
                 </div>
                 {consumptions}

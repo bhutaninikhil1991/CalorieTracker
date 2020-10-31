@@ -478,6 +478,11 @@ span.FoodsPanel__edit-foods--done-link:hover {
     bottom: 2px;
 }
 
+.Consumption__header--caloriesTotal img {
+    max-height: 26px;
+    margin: 0;
+}
+
 .ConsumptionItem {
     height: 90px;
     padding: 0 30px;
@@ -639,5 +644,72 @@ span.FoodsPanel__edit-foods--done-link:hover {
 .ConsumptionItem .ServingSelect .ServingSelect__add-button {
     display: none;
 }
+
+.DaySelect {
+    width: 300px;
+    position: relative;
+    float: left;
+}
+
+.DaySelect__arrow {
+    width: 18px;
+    height: 30px;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    bottom: 8px;
+}
+
+.DaySelect__arrow.left {
+    margin-right: 26px;
+    background: url("resources/left-arrow-icon.png") left no-repeat;
+    background-size: 90%;
+}
+
+.DaySelect__arrow.right {
+    margin-left: 26px;
+    background: url("resources/right-arrow-icon.png") left no-repeat;
+    background-size: 90%;
+}
+
+.DaySelect__choose {
+    cursor: pointer;
+}
+
+.DaySelect__calendar {
+    width: 46px;
+    height: 50px;
+    background: url("resources/calendar-icon.png") left no-repeat;
+    background-size: 100%;
+    display: inline-block;
+}
+
+.DaySelect__dayText {
+    font-size: 18px;
+    position: relative;
+    bottom: 16px;
+    padding-left: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.DayPicker {
+    position: absolute;
+    top: -8px;
+    left: 40px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.DayPicker-Day {
+    text-align: center !important;
+    outline: none !important;
+}
+
 
 
