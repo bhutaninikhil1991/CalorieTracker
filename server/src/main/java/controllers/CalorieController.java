@@ -9,11 +9,10 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.scheduling.TaskExecutors;
-import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import models.Consumption;
 import models.FoodItem;
-import models.User;
 import utils.HelperUtils;
 import utils.USDAAPIClient;
 
@@ -24,7 +23,7 @@ import java.util.*;
 /**
  * calorie controller
  */
-@ExecuteOn(TaskExecutors.IO)
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/api")
 public class CalorieController {
     @Inject
@@ -282,29 +281,4 @@ public class CalorieController {
         }
         return response;
     }
-
-
-    /**
-     * register user
-     *
-     * @param user
-     * @return HTTPSingleResponse
-     */
-    @Post("users/register")
-    public HTTPSingleResponse registerUser(@Body User user) {
-        HTTPSingleResponse response = new HTTPSingleResponse();
-        HashMap<String, Object> map = new HashMap<>();
-        try {
-            User usr = userService.createUser(user);
-            map.put(String.valueOf(usr.getId()), usr);
-            response.success = true;
-            response.data = map;
-        } catch (Exception ex) {
-            response.success = false;
-            response.errorMessage = "unable to register user";
-            HelperUtils.logErrorMessage(response.errorMessage, ex);
-        }
-        return response;
-    }
-
 }

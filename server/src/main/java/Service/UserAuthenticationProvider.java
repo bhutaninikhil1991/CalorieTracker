@@ -1,0 +1,53 @@
+package Service;
+
+import edu.umd.cs.findbugs.annotations.Nullable;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.security.authentication.*;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import models.User;
+import org.reactivestreams.Publisher;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Optional;
+
+@Singleton
+public class UserAuthenticationProvider implements AuthenticationProvider {
+
+    @Inject
+    protected UserService userService;
+    @Inject
+    protected PasswordEncoder passwordEncoder;
+
+    @Override
+    public Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+        return Flowable.create(emitter -> {
+            User user = fetchUser(authenticationRequest);
+            Optional<AuthenticationFailed> authenticationFailed = validate(user, authenticationRequest);
+            if (authenticationFailed.isPresent()) {
+                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.onComplete();
+            } else {
+                emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));
+            }
+        }, BackpressureStrategy.ERROR);
+    }
+
+    protected User fetchUser(AuthenticationRequest authenticationRequest) {
+        final String emailAddress = authenticationRequest.getIdentity().toString();
+        return userService.findUserByEmailAddress(emailAddress);
+    }
+
+    protected Optional<AuthenticationFailed> validate(User user, AuthenticationRequest authenticationRequest) {
+        AuthenticationFailed authenticationFailed = null;
+        if (user == null) {
+            authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.USER_NOT_FOUND);
+
+        } else if (!passwordEncoder.matches(authenticationRequest.getSecret().toString(), user.getPassword())) {
+            authenticationFailed = new AuthenticationFailed(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
+        }
+        return Optional.ofNullable(authenticationFailed);
+    }
+}

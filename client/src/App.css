@@ -711,5 +711,72 @@ span.FoodsPanel__edit-foods--done-link:hover {
     outline: none !important;
 }
 
+.content-container.LoginView_form {
+    margin-top: 20px;
+}
+
+.LoginView_form {
+    margin-top: 40px;
+}
+
+.LoginView_form h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #222722;
+}
+
+.LoginView_form form {
+    width: 40%;
+    margin: 40px auto;
+}
+
+.LoginView_form form label {
+    margin-bottom: 3px;
+}
+
+.LoginView_form form button {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    background-color: #08ae23;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+}
+
+.LoginView_form form button:hover {
+    background-color: #039b1c;
+}
+
+.LoginView_form form input {
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    color: #222722;
+    display: block;
+    width: 100%;
+    padding: 6px 14px;
+}
+
+.LoginView_form form input:focus {
+    border-color: #08ae23;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.LoginView_form--switch {
+    display: block;
+    text-align: center;
+}
+
+.LoginView_form--switch span {
+    color: #079b1f;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.LoginView_form--switch span:hover {
+    text-decoration: none;
+}
 
 

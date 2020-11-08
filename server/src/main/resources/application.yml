@@ -10,6 +10,18 @@ micronaut:
         enabled: true
         mapping: "/**"
         paths: "classpath:public"
+  security:
+    authentication: bearer
+    endpoints:
+      login:
+        enabled: true
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI
+    enabled: false
 
 datasources:
   default:

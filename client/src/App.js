@@ -8,6 +8,7 @@ import './App.css';
 import CreateFoodView from "./Components/CreateFoodView";
 import FoodViewContainer from "./Components/FoodViewContainer";
 import DayView from "./Components/DayView";
+import LoginView from "./Components/LoginView";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                     <Route exact path="/" component={DayView}/>
                     <Route exact path="/add" component={FoodViewContainer}/>
                     <Route exact path="/createfood" component={CreateFoodView}/>
+                    <Route exact path="/login" component={LoginView}/>
                 </Switch>
             </div>
         </Router>

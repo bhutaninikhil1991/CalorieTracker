@@ -9,12 +9,13 @@ import javax.inject.Singleton;
 import java.time.LocalDate;
 import java.util.List;
 
-@Singleton
 /**
  * service responsible for user related operations
  */
+@Singleton
 public class UserService {
     private UserRepository userRepository;
+    private PasswordEncoder encoder;
 
     /**
      * constructor
@@ -23,6 +24,7 @@ public class UserService {
      */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.encoder = new BCryptPasswordEncoderService();
     }
 
     /**
@@ -44,13 +46,41 @@ public class UserService {
         userRepository.deleteByUserId(userId);
     }
 
+
+    /**
+     * find user by email address
+     *
+     * @param emailAddress
+     * @return User
+     */
+    public User findUserByEmailAddress(String emailAddress) {
+        return userRepository.findUserByEmailAddress(emailAddress);
+    }
+
+    /**
+     * validate user credentials
+     *
+     * @param emailAddress
+     * @param password
+     * @return boolean
+     */
+    public boolean validateUserCredentials(String emailAddress, String password) {
+        User user = userRepository.findUser(emailAddress, password).orElse(null);
+        if (user != null)
+            return true;
+
+        return false;
+    }
+
     /**
      * save user
      *
-     * @param user
+     * @param emailAddress
+     * @param password
      * @return User
      */
-    public User createUser(User user) {
+    public User registerUser(String emailAddress, String password) {
+        User user = new User(0, emailAddress, encoder.encode(password));
         return userRepository.save(user);
     }
 

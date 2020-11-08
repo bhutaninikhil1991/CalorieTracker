@@ -89,6 +89,15 @@ public class User {
     }
 
     /**
+     * get user password
+     *
+     * @return
+     */
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
      * default constructor
      */
     public User() {

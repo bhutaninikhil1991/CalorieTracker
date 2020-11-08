@@ -7,6 +7,7 @@ import models.User;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -38,6 +39,29 @@ public class UserRepositoryImpl implements UserRepository {
     @Transactional
     public void deleteByUserId(@NotNull Integer userId) {
         findByUserId(userId).ifPresent(entityManager::remove);
+    }
+
+    @Override
+    @ReadOnly
+    public Optional<User> findUser(String emailAddress, String password) {
+        User user = (User) entityManager.createQuery("SELECT user FROM User AS user WHERE user.emailAddress =: emailAddress and user.password =: password")
+                .setParameter("emailAddress", emailAddress)
+                .setParameter("password", password)
+                .getSingleResult();
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    @ReadOnly
+    public User findUserByEmailAddress(String emailAddress) {
+        try {
+            User user = (User) entityManager.createQuery("SELECT user FROM User AS user WHERE user.emailAddress =: emailAddress")
+                    .setParameter("emailAddress", emailAddress)
+                    .getSingleResult();
+            return user;
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     @Override
