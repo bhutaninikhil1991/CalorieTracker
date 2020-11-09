@@ -22,6 +22,11 @@ public class AuthenticationController {
     @Inject
     protected final UserService userService;
 
+    /**
+     * constructor
+     *
+     * @param userService
+     */
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
@@ -57,6 +62,12 @@ public class AuthenticationController {
         return response;
     }
 
+    /**
+     * user login
+     *
+     * @param user
+     * @return HTTPSingleResponse
+     */
     @Post("/login")
     public HTTPSingleResponse login(@Body User user) {
         HTTPSingleResponse response = new HTTPSingleResponse();

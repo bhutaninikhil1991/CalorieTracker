@@ -2,6 +2,7 @@ package controllers;
 
 import Service.*;
 import calorieapp.HTTPSingleResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,7 +13,9 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import models.Consumption;
+import models.Exercise;
 import models.FoodItem;
+import models.Goal;
 import utils.HelperUtils;
 import utils.USDAAPIClient;
 
@@ -37,6 +40,15 @@ public class CalorieController {
     @Inject
     protected final UserFoodConsumptionService userFoodConsumptionService;
 
+    /**
+     * constructor
+     *
+     * @param foodService
+     * @param userService
+     * @param userFoodService
+     * @param consumptionService
+     * @param userFoodConsumptionService
+     */
     public CalorieController(FoodService foodService, UserService userService, UserFoodService userFoodService, ConsumptionService consumptionService, UserFoodConsumptionService userFoodConsumptionService) {
         this.foodService = foodService;
         this.userService = userService;
@@ -49,6 +61,7 @@ public class CalorieController {
      * get food details by fdcId
      *
      * @param fdcId
+     * @return HTTPSingleResponse
      */
     // api/foods?fdcId=167782
     @Get("/foods")
@@ -76,6 +89,7 @@ public class CalorieController {
      * search foods
      *
      * @param query
+     * @return HTTPSingleResponse
      */
     // api/foods/search?query=Cheddar cheese
     @Get("/foods/search")
@@ -189,6 +203,7 @@ public class CalorieController {
      * create consumption
      *
      * @param object
+     * @return HTTPSingleResponse
      */
     @Post("/consumptions")
     public HTTPSingleResponse CreateConsumption(@Body String object) {
@@ -219,6 +234,7 @@ public class CalorieController {
      * delete consumption
      *
      * @param consumptionId
+     * @return HTTPSingleResponse
      */
     @Post("/consumptions/delete/{consumptionId}")
     public HTTPSingleResponse deleteConsumption(int consumptionId) {
@@ -239,6 +255,7 @@ public class CalorieController {
      *
      * @param userId
      * @param consumptionDate
+     * @return HTTPSingleResponse
      */
     @Get("/consumptions")
     public HTTPSingleResponse getConsumptions(int userId, String consumptionDate) {
@@ -263,22 +280,131 @@ public class CalorieController {
 
     /**
      * update consumption
+     *
+     * @param object
+     * @return HTTPSingleResponse
      */
     @Post("/consumptions/update")
     public HTTPSingleResponse updateConsumption(@Body String object) {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
-        JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
-        Consumption consumption = userFoodConsumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
-        if (consumption == null) {
-            response.success = false;
-            response.errorMessage = "unable to update the record";
-        } else {
+        try {
+            JsonObject consumptionObject = new JsonParser().parse(object).getAsJsonObject();
+            Consumption consumption = userFoodConsumptionService.extractConsumptionData(consumptionObject.getAsJsonObject("consumption"));
             Consumption savedItem = consumptionService.saveOrUpdateConsumption(consumption);
             response.success = true;
             map.put(String.valueOf(consumption.getId()), savedItem);
             response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to update the consumption record";
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
         }
         return response;
     }
+
+    /**
+     * set user goals
+     *
+     * @param userId
+     * @param object
+     * @return HTTPSingleResponse
+     */
+    @Post("/goals/{userId}")
+    public HTTPSingleResponse setUserGoal(int userId, @Body String object) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            JsonObject goalObject = new JsonParser().parse(object).getAsJsonObject();
+            List<Goal> goals = userFoodConsumptionService.saveOrUpdateUserGoals(userId, goalObject.getAsJsonObject("goals"));
+            response.success = true;
+            map.put(String.valueOf(userId), goals);
+            response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to set goals for user " + userId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * get user goals
+     *
+     * @param userId
+     * @return HTTPSingleResponse
+     */
+    @Get("/goals")
+    public HTTPSingleResponse getUserGoal(int userId) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            List<Goal> userGoals = userService.getUserGoals(userId);
+            map.put(String.valueOf(userId), userGoals);
+            response.success = true;
+            response.data = map;
+            if (userGoals.size() <= 0) {
+                response.errorMessage = "No records found";
+            }
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to fetch goals for userId:" + userId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * add or update exercise
+     *
+     * @param userId
+     * @param object
+     * @return HTTPSingleResponse
+     */
+    @Post("/exercise/{userId}")
+    public HTTPSingleResponse addOrUpdateUserExercises(int userId, @Body String object) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            JsonObject exerciseObject = new JsonParser().parse(object).getAsJsonObject();
+            Exercise exercise = userFoodConsumptionService.saveOrUpdateExercise(userId, exerciseObject.getAsJsonObject("activity"));
+            response.success = true;
+            map.put(String.valueOf(userId), exercise);
+            response.data = map;
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to save exercise record for user " + userId;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * get user exercise
+     *
+     * @param userId
+     * @param exerciseDate
+     * @return HTTPSingleResponse
+     */
+    @Get("/exercise")
+    public HTTPSingleResponse getUserExercises(int userId, String exerciseDate) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            LocalDate date = LocalDate.parse(exerciseDate);
+            Exercise exercise = userService.getUserExercise(userId, date);
+            response.success = true;
+            map.put(String.valueOf(userId), exercise);
+            response.data = map;
+            if (exercise == null) {
+                response.errorMessage = "No records found";
+            }
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to fetch exercise record for userId:" + userId + " and exerciseDate:" + exerciseDate;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
 }

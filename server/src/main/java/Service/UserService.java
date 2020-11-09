@@ -1,9 +1,7 @@
 package Service;
 
 import Repository.UserRepository;
-import models.Consumption;
-import models.FoodItem;
-import models.User;
+import models.*;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
@@ -94,7 +92,28 @@ public class UserService {
         return userRepository.getUserFoodItems(userId);
     }
 
+    /**
+     * get user consumptions
+     *
+     * @param userId
+     * @param consumptionDate
+     * @return List<Consumption>
+     */
     public List<Consumption> getUserConsumptions(int userId, LocalDate consumptionDate) {
         return userRepository.getUserConsumptions(userId, consumptionDate);
+    }
+
+    /**
+     * get user goals
+     *
+     * @param userId
+     * @return List<Goal>
+     */
+    public List<Goal> getUserGoals(int userId) {
+        return userRepository.getUserGoals(userId);
+    }
+
+    public Exercise getUserExercise(int userId, LocalDate exerciseDate) {
+        return userRepository.getUserExercise(userId, exerciseDate);
     }
 }

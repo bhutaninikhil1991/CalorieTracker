@@ -1,13 +1,10 @@
 package Repository;
 
 import io.micronaut.transaction.annotation.ReadOnly;
-import models.Consumption;
-import models.FoodItem;
-import models.User;
+import models.*;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -78,5 +75,21 @@ public class UserRepositoryImpl implements UserRepository {
                 .setParameter("creator_id", userId)
                 .setParameter("consumption_date", consumptionDate)
                 .getResultList();
+    }
+
+    @Override
+    @ReadOnly
+    public List<Goal> getUserGoals(@NotNull Integer userId) {
+        User user = entityManager.find(User.class, userId);
+        return user.getUserGoals();
+    }
+
+    @Override
+    @ReadOnly
+    public Exercise getUserExercise(@NotNull Integer userId, LocalDate exerciseDate) {
+        return entityManager.createQuery("SELECT e FROM Exercise AS e WHERE e.creator.id =: creator_id and e.exerciseDate =: exercise_date", Exercise.class)
+                .setParameter("creator_id", userId)
+                .setParameter("exercise_date", exerciseDate)
+                .getSingleResult();
     }
 }

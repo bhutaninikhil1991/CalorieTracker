@@ -1,8 +1,6 @@
 package Repository;
 
-import models.Consumption;
-import models.FoodItem;
-import models.User;
+import models.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -23,4 +21,8 @@ public interface UserRepository {
     List<FoodItem> getUserFoodItems(@NotNull Integer userId);
 
     List<Consumption> getUserConsumptions(@NotNull Integer userId, LocalDate consumptionDate);
+
+    List<Goal> getUserGoals(@NotNull Integer userId);
+
+    Exercise getUserExercise(@NotNull Integer userId, LocalDate exerciseDate);
 }

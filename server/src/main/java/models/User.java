@@ -38,6 +38,24 @@ public class User {
     @JsonIgnore
     private List<Consumption> userConsumptions;
 
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "creator",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    @JsonIgnore
+    private List<Goal> userGoals;
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "creator",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    @JsonIgnore
+    private List<Exercise> exercises;
+
 
     /**
      * get user Id
@@ -73,6 +91,24 @@ public class User {
      */
     public List<Consumption> getUserConsumptions() {
         return Collections.unmodifiableList(userConsumptions);
+    }
+
+    /**
+     * getter for user goals
+     *
+     * @return List<Goal>
+     */
+    public List<Goal> getUserGoals() {
+        return Collections.unmodifiableList(userGoals);
+    }
+
+    /**
+     * getter for user exercises
+     *
+     * @return List<Exercise>
+     */
+    public List<Exercise> getUserExercises() {
+        return Collections.unmodifiableList(exercises);
     }
 
     /**

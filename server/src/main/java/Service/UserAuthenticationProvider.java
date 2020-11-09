@@ -13,6 +13,9 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * user authentication provider
+ */
 @Singleton
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
@@ -21,6 +24,13 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Inject
     protected PasswordEncoder passwordEncoder;
 
+    /**
+     * authenticate user
+     *
+     * @param httpRequest
+     * @param authenticationRequest
+     * @return Publisher<AuthenticationResponse>
+     */
     @Override
     public Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Flowable.create(emitter -> {
@@ -35,11 +45,24 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         }, BackpressureStrategy.ERROR);
     }
 
+    /**
+     * fetch user record
+     *
+     * @param authenticationRequest
+     * @return User
+     */
     protected User fetchUser(AuthenticationRequest authenticationRequest) {
         final String emailAddress = authenticationRequest.getIdentity().toString();
         return userService.findUserByEmailAddress(emailAddress);
     }
 
+    /**
+     * validate user
+     *
+     * @param user
+     * @param authenticationRequest
+     * @return Optional<AuthenticationFailed>
+     */
     protected Optional<AuthenticationFailed> validate(User user, AuthenticationRequest authenticationRequest) {
         AuthenticationFailed authenticationFailed = null;
         if (user == null) {
