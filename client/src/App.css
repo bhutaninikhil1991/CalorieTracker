@@ -375,7 +375,7 @@ span.FoodsPanel__edit-foods--done-link:hover {
     color: #c22317;
 }
 
-.CreateFoodView__submit-button {
+.CreateFoodView__submit-button .MyGoals__submit-button {
     background-color: #08ae23;
     color: white;
     padding: 12px 20px;
@@ -385,7 +385,7 @@ span.FoodsPanel__edit-foods--done-link:hover {
     margin-right: 30px;
 }
 
-.CreateFoodView__submit-button:hover {
+.CreateFoodView__submit-button:hover .MyGoals__submit-button:hover {
     background-color: #039b1c;
 }
 
@@ -779,4 +779,45 @@ span.FoodsPanel__edit-foods--done-link:hover {
     text-decoration: none;
 }
 
+.MyGoals__form--input {
+    width: 25%;
+    float: left;
+}
+
+.MyGoals__form label {
+    margin: 0 0 3px 10px;
+}
+
+.MyGoals__form input {
+    display: block;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    height: 36px;
+    width: 80%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+
+.MyGoals__form input:focus {
+    border-color: #08ae23;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.MyGoals__form button {
+    margin-top: 25px;
+}
+
+.MyGoals__form button.saving {
+    background-color: #BDBDBD;
+    cursor: default;
+}
+
+.MyGoals__form--save-success {
+    color: #056E46;
+}
+
+#save-success-message {
+    animation-duration: 1.8s;
+    -moz-animation-duration: 1.8s;
+}
 
