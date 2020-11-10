@@ -3,6 +3,8 @@ import {SERVER_URL} from "../config";
 import update from "immutability-helper";
 import Consumption from "./Consumption";
 import DaySelect from "./DaySelect";
+import ActivityInput from "./ActivityInput";
+import NetCalories from "./NetCalories";
 
 /**
  * class displays a particular consumption date view
@@ -17,6 +19,8 @@ class DayView extends Component {
         this.state = {
             selectedDay: this.getTodaysDate(),
             items: [],
+            caloriesBurned: undefined,
+            goals: {},
             loadingItems: true,
             removingItem: false
         }
@@ -27,7 +31,10 @@ class DayView extends Component {
      */
     componentDidMount() {
         document.title = "Calorie App";
-        this.getConsumptions(this.state.selectedDay);
+        const userId = 1;
+        this.getConsumptions(userId, this.state.selectedDay);
+        this.getActivity(userId, this.state.selectedDay);
+        this.getGoals(userId);
     }
 
     /**
@@ -42,8 +49,7 @@ class DayView extends Component {
      * get users consumptions
      * @param day
      */
-    getConsumptions(day) {
-        const userId = 1;
+    getConsumptions(userId, day) {
         let date = day.toISOString().split('T')[0];
         fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${date}`)
             .then((response) => {
@@ -57,6 +63,39 @@ class DayView extends Component {
                         });
                 } else {
                     alert("unable to load consumptions");
+                }
+            });
+    }
+
+    getActivity(userId, day) {
+        let date = day.toISOString().split('T')[0];
+        fetch(`${SERVER_URL}/api/exercise?userId=${userId}&exerciseDate=${date}`)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                        .then(result => {
+                            let activity = result.success && result.data !== undefined ? result.data[userId] : [];
+                            if (activity.caloriesBurned === 0) {
+                                this.setState({caloriesBurned: undefined});
+                            } else {
+                                this.setState({caloriesBurned: activity.caloriesBurned});
+                            }
+                        });
+                } else {
+                    alert("unable to load exercises");
+                }
+            });
+    }
+
+    getGoals(userId) {
+        fetch(`${SERVER_URL}/api/goals?userId=${userId}`)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                        .then(result => {
+                            let goals = result.success && result.data !== undefined ? result.data[userId] : [];
+                            this.setState({goals: goals});
+                        });
                 }
             });
     }
@@ -124,14 +163,76 @@ class DayView extends Component {
      * @param newDay
      */
     changeSelectedDay(newDay) {
+        const userId = 1;
         this.setState({
             selectedDay: newDay
         }, () => {
-            this.getConsumptions(newDay);
+            this.getConsumptions(userId, newDay);
+            this.getActivity(userId, newDay);
         })
     }
 
+    handleActivityChange(calories) {
+        let caloriesInt = parseInt(calories);
+        this.setState({caloriesBurned: calories});
+        const userId = 1;
+        this.saveActivity(userId, caloriesInt);
+    }
+
+    saveActivity(userId, calories) {
+        let calsBurned = calories ? calories : 0;
+        const activityObj = {
+            caloriesBurned: calsBurned,
+            exerciseDate: this.state.selectedDay
+        }
+
+        const reqObj = {
+            activity: activityObj
+        }
+
+        fetch(`${SERVER_URL}/api/exercise/${userId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reqObj)
+        }).then(response => {
+            if (response.ok) {
+
+            } else {
+                alert("There is a problem updating record");
+            }
+        });
+    }
+
+    /**
+     * calculate total
+     * @returns {{carbs: number, protein: number, fat: number, caloriesEaten: number, netCalories: number}}
+     */
+    calculateItemTotals() {
+        let totalCals, totalCarbs, totalFat, totalProtein;
+        totalCals = totalCarbs = totalFat = totalProtein = 0;
+        this.state.items.forEach(item => {
+            let servingSizeMultiplier = item.selectedServing.ratio * item.servingQuantity;
+
+            totalCals += Math.round(item.foodItem.calories * servingSizeMultiplier);
+            totalCarbs += Math.round(item.foodItem.carbohydrates * servingSizeMultiplier);
+            totalFat += Math.round(item.foodItem.fat * servingSizeMultiplier);
+            totalProtein += Math.round(item.foodItem.protein * servingSizeMultiplier);
+        });
+
+        // calculate net calories consumption - activity
+        let netCalories = totalCals - (this.state.caloriesBurned ? this.state.caloriesBurned : 0);
+
+        return {
+            caloriesEaten: totalCals,
+            netCalories: netCalories,
+            carbs: totalCarbs,
+            fat: totalFat,
+            protein: totalProtein
+        };
+    }
+
     render() {
+        let dayTotals = this.calculateItemTotals();
         return (
             <div className="DayView content-container">
                 <DaySelect
@@ -145,6 +246,14 @@ class DayView extends Component {
                     handleItemRemove={this.removeItem.bind(this)}
                     day={this.state.selectedDay}
                     removingItem={this.state.removingItem}
+                />
+                <ActivityInput caloriesBurned={this.state.caloriesBurned}
+                               handleActivityChange={this.handleActivityChange.bind(this)}/>
+                <NetCalories
+                    caloriesEaten={dayTotals.caloriesEaten}
+                    caloriesBurned={this.state.caloriesBurned}
+                    netCalories={dayTotals.netCalories}
+                    caloriesGoal={this.state.goals.calories}
                 />
             </div>
         );
