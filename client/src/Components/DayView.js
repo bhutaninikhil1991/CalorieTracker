@@ -5,6 +5,7 @@ import Consumption from "./Consumption";
 import DaySelect from "./DaySelect";
 import ActivityInput from "./ActivityInput";
 import NetCalories from "./NetCalories";
+import {Link} from "react-router-dom";
 
 /**
  * class displays a particular consumption date view
@@ -20,7 +21,12 @@ class DayView extends Component {
             selectedDay: this.getTodaysDate(),
             items: [],
             caloriesBurned: undefined,
-            goals: {},
+            goals: {
+                calories: -1,
+                carbohydrates: -1,
+                fat: -1,
+                protein: -1
+            },
             loadingItems: true,
             removingItem: false
         }
@@ -93,7 +99,13 @@ class DayView extends Component {
                 if (response.ok) {
                     return response.json()
                         .then(result => {
-                            let goals = result.success && result.data !== undefined ? result.data[userId] : [];
+                            let items = result.success && result.data !== undefined ? result.data[userId] : [];
+                            if (items.length <= 0)
+                                return;
+                            let goals = {};
+                            items.map((item) => {
+                                goals[item.goalCategory.toLowerCase()] = item.goalValue;
+                            });
                             this.setState({goals: goals});
                         });
                 }
@@ -176,14 +188,18 @@ class DayView extends Component {
         let caloriesInt = parseInt(calories);
         this.setState({caloriesBurned: calories});
         const userId = 1;
-        this.saveActivity(userId, caloriesInt);
+        //to fix issue with multiple post request
+        if (this.apiPostTimeout) {
+            clearTimeout(this.apiPostTimeout);
+        }
+        this.apiPostTimeout = setTimeout(() => this.saveActivity(userId, caloriesInt), 500);
     }
 
     saveActivity(userId, calories) {
         let calsBurned = calories ? calories : 0;
         const activityObj = {
             caloriesBurned: calsBurned,
-            exerciseDate: this.state.selectedDay
+            exerciseDate: this.state.selectedDay.toISOString().split('T')[0]
         }
 
         const reqObj = {
@@ -233,6 +249,14 @@ class DayView extends Component {
 
     render() {
         let dayTotals = this.calculateItemTotals();
+        let caloriesGoalText;
+        if (this.state.goals.calories > -1) {
+            caloriesGoalText = (<span className="DayView__caloriesGoal">GOAL: {this.state.goals.calories}</span>);
+        } else {
+            caloriesGoalText = (
+                <span className="DayView__caloriesGoal">You haven't <Link
+                    to={"/goal"}>set your goals</Link> yet.</span>);
+        }
         return (
             <div className="DayView content-container">
                 <DaySelect
@@ -255,6 +279,8 @@ class DayView extends Component {
                     netCalories={dayTotals.netCalories}
                     caloriesGoal={this.state.goals.calories}
                 />
+
+                {caloriesGoalText}
             </div>
         );
     }

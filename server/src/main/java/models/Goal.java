@@ -27,7 +27,7 @@ public class Goal {
         CALORIES,
         CARBOHYDRATES,
         FAT,
-        PROTEINS
+        PROTEIN
     }
 
     private int goalValue;

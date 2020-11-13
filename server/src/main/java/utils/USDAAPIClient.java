@@ -1,9 +1,9 @@
 package utils;
 
-import calorieapp.CalorieAppConfig;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.annotation.ConfigurationProperties;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,12 +14,46 @@ import java.net.URL;
 public class USDAAPIClient {
 
     private static ApplicationContext ctx = ApplicationContext.run(ApplicationContext.class);
-    private static CalorieAppConfig config = ctx.getBean(CalorieAppConfig.class);
+    private static AppConfig config = ctx.getBean(USDAAPIClient.AppConfig.class);
     private static String secretKeyId = config.getSecretkeyid();
 
     //https://fdc.nal.usda.gov/faq.html
     //Branded, SR Legacy and Survey(FNDDS) foods are available for general public except for Foundation and Experimental Foods
     private static final String dataTypeList = "Branded,SR Legacy,Survey (FNDDS)";
+
+
+    /**
+     * nested class
+     */
+    @ConfigurationProperties("USDA")
+    private static class AppConfig {
+        private String secretkeyid;
+
+        /**
+         * constructor
+         */
+        public AppConfig() {
+
+        }
+
+        /**
+         * setter for api key
+         *
+         * @param secretkeyid
+         */
+        public void setSecretkeyid(String secretkeyid) {
+            this.secretkeyid = secretkeyid;
+        }
+
+        /**
+         * getter for api key
+         *
+         * @return
+         */
+        public String getSecretkeyid() {
+            return secretkeyid;
+        }
+    }
 
     /**
      * Returns a list of foods that matched search (query) keywords
@@ -49,5 +83,4 @@ public class USDAAPIClient {
         JsonObject jsonObject = (JsonObject) parser.parse(URLReader.getUrlContent(endpoint));
         return jsonObject;
     }
-
 }

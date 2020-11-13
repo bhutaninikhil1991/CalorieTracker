@@ -25,8 +25,7 @@ class LoginView extends Component {
             fetch(`${SERVER_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.state.email + ':' + this.state.password + ':' + this.state.clientToken,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(reqObj)
             }).then(response => {
@@ -35,7 +34,10 @@ class LoginView extends Component {
         } else {
             fetch(`${SERVER_URL}/auth/login`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.state.email}:${this.state.password}:${this.state.clientToken}`,
+                },
                 body: JSON.stringify(reqObj)
             }).then(response => {
 

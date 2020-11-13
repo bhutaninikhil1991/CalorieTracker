@@ -28,12 +28,12 @@ class MyGoals extends Component {
                     return response.json()
                         .then(results => {
                             let items = results.success && results.data !== undefined ? results.data[userId] : [];
-                            let goals = {
-                                calories: items[0].goalValue,
-                                carbohydrates: items[1].goalValue,
-                                fat: items[2].goalValue,
-                                protein: items[3].goalValue
-                            }
+                            if (items.length <= 0)
+                                return;
+                            let goals = {};
+                            items.map((item) => {
+                                goals[item.goalCategory.toLowerCase()] = item.goalValue;
+                            });
                             this.setState({goals: goals});
                         });
                 }

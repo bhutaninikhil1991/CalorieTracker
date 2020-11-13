@@ -910,3 +910,69 @@ span.ActivityInput__calsLabel.active {
     padding: 0 0 0 56px;
 }
 
+.NetCalories__goalDifference {
+    display: block;
+    float: right;
+    font-weight: bold;
+    font-size: 30px;
+    position: relative;
+}
+
+.NetCalories__goalDifference.under {
+    color: green;
+}
+
+.NetCalories__goalDifference.over {
+    color: #c22317;
+}
+
+.header {
+    border-bottom: 1px solid #b5c4b7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 999;
+}
+
+.header-container {
+    min-width: 900px;
+    min-height: 50px;
+}
+
+.header nav {
+    width: 60%;
+    float: right;
+    text-align: right;
+    position: relative;
+    top: 11px;
+}
+
+.header nav a {
+    margin-right: 100px;
+    color: #003300;
+    text-decoration: none;
+}
+
+.header nav a:hover {
+    text-decoration: none;
+    color: #08ae23;
+}
+
+.DayView__caloriesGoal {
+    float: right;
+    font-size: 20px;
+    color: #6c6c6c;
+}
+
+.DayView__caloriesGoal a {
+    text-decoration: underline;
+    color: #2F822F;
+}
+
+.DayView__caloriesGoal a:hover {
+    text-decoration: none;
+}

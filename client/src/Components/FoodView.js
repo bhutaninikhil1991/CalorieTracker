@@ -69,6 +69,14 @@ class FoodView extends Component {
      */
     // to get search results
     getSearchResults(searchFoodItem) {
+        //to fix issue with multiple post request
+        if (this.apiPostTimeout) {
+            clearTimeout(this.apiPostTimeout);
+        }
+        this.apiPostTimeout = setTimeout(() => this.searchItems(searchFoodItem), 500);
+    }
+
+    searchItems(searchFoodItem) {
         fetch(`${SERVER_URL}/api/foods/search?query=${searchFoodItem}`)
             .then((response) => {
                 if (response.ok) {
