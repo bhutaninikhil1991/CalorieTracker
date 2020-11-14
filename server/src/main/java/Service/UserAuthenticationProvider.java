@@ -37,7 +37,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             User user = fetchUser(authenticationRequest);
             Optional<AuthenticationFailed> authenticationFailed = validate(user, authenticationRequest);
             if (authenticationFailed.isPresent()) {
-                emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+                emitter.onError(new AuthenticationException(authenticationFailed.get()));
                 emitter.onComplete();
             } else {
                 emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));

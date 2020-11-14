@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -11,22 +11,35 @@ import DayView from "./Components/DayView";
 import LoginView from "./Components/LoginView";
 import MyGoals from "./Components/MyGoals";
 import Header from "./Components/Header";
+import StatisticsView from "./Components/StatisticsView";
 
-function App() {
-    return (
-        <Router>
-            <div className="App">
-                <Header/>
-                <Switch>
-                    <Route exact path="/" component={DayView}/>
-                    <Route exact path="/add" component={FoodViewContainer}/>
-                    <Route exact path="/createfood" component={CreateFoodView}/>
-                    <Route exact path="/login" component={LoginView}/>
-                    <Route exact path="/goal" component={MyGoals}/>
-                </Switch>
-            </div>
-        </Router>
-    );
+class App extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+
+    render() {
+        let location = document.location.href;
+        let onLoginPage = location.includes("login");
+
+        return (
+            <Router>
+                <div className="App">
+                    {!onLoginPage && <Header/>}
+                    <Switch>
+                        <Route exact path="/login" component={LoginView}/>
+                        <Route exact path="/" component={DayView}/>
+                        <Route exact path="/add" component={FoodViewContainer}/>
+                        <Route exact path="/createfood" component={CreateFoodView}/>
+                        <Route exact path="/goal" component={MyGoals}/>
+                        <Route exact path="/stats" component={StatisticsView}/>
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default App;

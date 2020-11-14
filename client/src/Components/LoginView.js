@@ -9,7 +9,7 @@ class LoginView extends Component {
             registering: false,
             email: '',
             password: '',
-            clientToken: 'R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI'
+            errorMessage: ''
         }
     }
 
@@ -17,7 +17,7 @@ class LoginView extends Component {
         e.preventDefault();
 
         const reqObj = {
-            emailAddress: this.state.email,
+            username: this.state.email,
             password: this.state.password
         }
 
@@ -32,15 +32,24 @@ class LoginView extends Component {
                 alert(response);
             });
         } else {
-            fetch(`${SERVER_URL}/auth/login`, {
+            fetch(`${SERVER_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.state.email}:${this.state.password}:${this.state.clientToken}`,
                 },
                 body: JSON.stringify(reqObj)
-            }).then(response => {
-
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json()
+                        .then(result => {
+                            localStorage.setItem("token", result.access_token);
+                            window.location = "/";
+                        });
+                } else {
+                    this.setState({
+                        errorMessage: response.message
+                    })
+                }
             });
         }
     }

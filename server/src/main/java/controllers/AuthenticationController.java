@@ -42,7 +42,7 @@ public class AuthenticationController {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         JsonObject userObject = new JsonParser().parse(object).getAsJsonObject();
-        String emailAddress = userObject.get("emailAddress").getAsString();
+        String emailAddress = userObject.get("username").getAsString();
         String password = userObject.get("password").getAsString();
         try {
             if (userService.findUserByEmailAddress(emailAddress) == null) {
@@ -58,24 +58,6 @@ public class AuthenticationController {
             response.success = false;
             response.errorMessage = "unable to register user";
             HelperUtils.logErrorMessage(response.errorMessage, ex);
-        }
-        return response;
-    }
-
-    /**
-     * user login
-     *
-     * @param user
-     * @return HTTPSingleResponse
-     */
-    @Post("/login")
-    public HTTPSingleResponse login(@Body User user) {
-        HTTPSingleResponse response = new HTTPSingleResponse();
-        HashMap<String, Object> map = new HashMap<>();
-        try {
-
-        } catch (Exception ex) {
-
         }
         return response;
     }

@@ -103,7 +103,7 @@ class DayView extends Component {
                             if (items.length <= 0)
                                 return;
                             let goals = {};
-                            items.map((item) => {
+                            items.forEach((item) => {
                                 goals[item.goalCategory.toLowerCase()] = item.goalValue;
                             });
                             this.setState({goals: goals});
