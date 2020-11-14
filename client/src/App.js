@@ -25,8 +25,8 @@ class App extends Component {
         let onLoginPage = location.includes("login");
 
         return (
-            <Router>
-                <div className="App">
+            <div className="App">
+                <Router>
                     {!onLoginPage && <Header/>}
                     <Switch>
                         <Route exact path="/login" component={LoginView}/>
@@ -36,8 +36,8 @@ class App extends Component {
                         <Route exact path="/goal" component={MyGoals}/>
                         <Route exact path="/stats" component={StatisticsView}/>
                     </Switch>
-                </div>
-            </Router>
+                </Router>
+            </div>
         );
     }
 }
