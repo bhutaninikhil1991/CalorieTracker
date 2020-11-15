@@ -3,7 +3,7 @@ package Repository;
 import models.*;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +20,9 @@ public interface UserRepository {
 
     List<FoodItem> getUserFoodItems(@NotNull Integer userId);
 
-    List<Consumption> getUserConsumptions(@NotNull Integer userId, LocalDate consumptionDate);
+    List<Consumption> getUserConsumptions(@NotNull Integer userId, Date consumptionDate);
 
     List<Goal> getUserGoals(@NotNull Integer userId);
 
-    Exercise getUserExercise(@NotNull Integer userId, LocalDate exerciseDate);
+    Exercise getUserExercise(@NotNull Integer userId, Date exerciseDate);
 }

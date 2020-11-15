@@ -1,9 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,7 +20,9 @@ public class Exercise {
 
     private int caloriesBurned;
 
-    private LocalDate exerciseDate;
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date exerciseDate;
 
     /**
      * constructor
@@ -35,7 +38,7 @@ public class Exercise {
      * @param caloriesBurned
      * @param exerciseDate
      */
-    public Exercise(User user, int caloriesBurned, LocalDate exerciseDate) {
+    public Exercise(User user, int caloriesBurned, Date exerciseDate) {
         this.creator = user;
         this.caloriesBurned = caloriesBurned;
         this.exerciseDate = exerciseDate;
@@ -62,10 +65,10 @@ public class Exercise {
     /**
      * getter for exercise date
      *
-     * @return String
+     * @return Date
      */
-    public String getExerciseDate() {
-        return exerciseDate.toString();
+    public Date getExerciseDate() {
+        return exerciseDate;
     }
 
     /**

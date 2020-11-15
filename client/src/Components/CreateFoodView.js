@@ -4,6 +4,7 @@ import carbsIcon from "../resources/bread-emoji.png";
 import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 import {Link} from "react-router-dom";
+import qs from 'qs';
 
 /**
  * class allows user to create food items
@@ -14,6 +15,8 @@ class CreateFoodView extends Component {
      * @param e
      */
     handleSubmit(e) {
+        const qsParsed = qs.parse(document.location.search.slice(1));
+        let day = qsParsed.day;
         e.preventDefault();
         const userId = 1;
         const servingSize = {
@@ -36,7 +39,7 @@ class CreateFoodView extends Component {
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {
-                window.location = "/add";
+                window.location = "/add?day=" + day + "&tab=1";
             } else {
                 alert("unable to add food item")
             }
@@ -44,6 +47,8 @@ class CreateFoodView extends Component {
     }
 
     render() {
+        const qsParsed = qs.parse(this.props.location.search.slice(1));
+        let day = qsParsed.day;
         return (
             <div className="CreateFoodView content-container">
                 <h1 className="page-title">Create Food</h1>
@@ -76,7 +81,7 @@ class CreateFoodView extends Component {
                             <input type="text" name="protein" id="protein" placeholder="50 gm"/>
                         </div>
                         <button className="CreateFoodView__submit-button" type="submit">Create Food</button>
-                        <Link to="/add" className="cancel-link">Cancel</Link>
+                        <Link to={"/add?day=" + day + "&tab=1"} className="cancel-link">Cancel</Link>
                     </div>
                 </form>
             </div>

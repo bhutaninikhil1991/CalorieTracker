@@ -37,6 +37,16 @@ public class FoodItem {
     @JoinColumn(name = "food_item_id", referencedColumnName = "ID")
     private List<ServingSize> servingSizes = new ArrayList<>();
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    @Fetch(FetchMode.SELECT)
+    @JoinColumn(name = "food_item_id", referencedColumnName = "ID")
+    @JsonIgnore
+    private List<Consumption> consumptions = new ArrayList<>();
+
     /**
      * constructor
      *

@@ -1,8 +1,12 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * class stores serving size i.e. cup, slice, oz
@@ -20,6 +24,16 @@ public class ServingSize {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private FoodItem foodItem;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    @Fetch(FetchMode.SELECT)
+    @JoinColumn(name = "selected_serving_id", referencedColumnName = "ID")
+    @JsonIgnore
+    private List<Consumption> consumptions = new ArrayList<>();
 
     /**
      * constructor

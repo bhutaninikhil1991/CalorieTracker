@@ -4,7 +4,7 @@ import Repository.UserRepository;
 import models.*;
 
 import javax.inject.Singleton;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -99,7 +99,7 @@ public class UserService {
      * @param consumptionDate
      * @return List<Consumption>
      */
-    public List<Consumption> getUserConsumptions(int userId, LocalDate consumptionDate) {
+    public List<Consumption> getUserConsumptions(int userId, Date consumptionDate) {
         return userRepository.getUserConsumptions(userId, consumptionDate);
     }
 
@@ -113,7 +113,14 @@ public class UserService {
         return userRepository.getUserGoals(userId);
     }
 
-    public Exercise getUserExercise(int userId, LocalDate exerciseDate) {
+    /**
+     * get user exercise
+     *
+     * @param userId
+     * @param exerciseDate
+     * @return Exercise
+     */
+    public Exercise getUserExercise(int userId, Date exerciseDate) {
         return userRepository.getUserExercise(userId, exerciseDate);
     }
 }

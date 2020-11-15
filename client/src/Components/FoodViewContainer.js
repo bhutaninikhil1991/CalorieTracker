@@ -18,9 +18,9 @@ class FoodViewContainer extends Component {
     }
 
     render() {
-        const qsParsed = qs.parse(document.location.search.slice(1));
-        const tab = 0;
+        const qsParsed = qs.parse(this.props.location.search.slice(1));
         const day = qsParsed.day;
+        const tab = parseInt(qsParsed.tab);
         if (tab && this.state.tab !== tab) {
             this.setState({tab});
         }

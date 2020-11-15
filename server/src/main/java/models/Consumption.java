@@ -1,9 +1,11 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,14 +21,18 @@ public class Consumption {
     private User creator;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(referencedColumnName = "ID")
     private FoodItem foodItem;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(referencedColumnName = "ID")
     private ServingSize selectedServing;
 
     private double servingQuantity;
 
-    private LocalDate consumptionDate;
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date consumptionDate;
 
     /**
      * default constructor
@@ -44,7 +50,7 @@ public class Consumption {
      * @param servingQuantity
      * @param consumptionDate
      */
-    public Consumption(User user, FoodItem foodItem, ServingSize selectedServing, double servingQuantity, LocalDate consumptionDate) {
+    public Consumption(User user, FoodItem foodItem, ServingSize selectedServing, double servingQuantity, Date consumptionDate) {
         this.creator = user;
         this.foodItem = foodItem;
         this.selectedServing = selectedServing;
@@ -93,7 +99,7 @@ public class Consumption {
      *
      * @param consumptionDate
      */
-    public void setConsumptionDate(LocalDate consumptionDate) {
+    public void setConsumptionDate(Date consumptionDate) {
         this.consumptionDate = consumptionDate;
     }
 
@@ -145,10 +151,10 @@ public class Consumption {
     /**
      * getter for consumption date
      *
-     * @return LocalDate
+     * @return Date
      */
-    public String getConsumptionDate() {
-        return consumptionDate.toString();
+    public Date getConsumptionDate() {
+        return consumptionDate;
     }
 
     /**
@@ -190,6 +196,21 @@ public class Consumption {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    /**
+     * get category value
+     *
+     * @param category
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    public long calculateCategoryValue(Goal.GoalCategory category) throws NoSuchFieldException, IllegalAccessException {
+        Field field = FoodItem.class.getDeclaredField(category.toString().toLowerCase());
+        field.setAccessible(true);
+        double value = field.getDouble(this.foodItem);
+        return Math.round(value * this.servingQuantity * this.selectedServing.getRatio());
     }
 
 }

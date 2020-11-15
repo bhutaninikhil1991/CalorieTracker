@@ -6,6 +6,8 @@ import models.Exercise;
 import models.Goal;
 
 import javax.inject.Singleton;
+import java.util.Date;
+import java.util.List;
 
 /**
  * consumption service
@@ -80,5 +82,29 @@ public class ConsumptionService {
      */
     public Exercise getExerciseById(int exerciseId) {
         return consumptionRepository.findByExerciseId(exerciseId).orElse(null);
+    }
+
+    /**
+     * get consumption list
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return List<Consumption>
+     */
+    public List<Consumption> getConsumptionList(int userId, Date dateFrom, Date dateTo) {
+        return consumptionRepository.getConsumptionList(userId, dateFrom, dateTo);
+    }
+
+    /**
+     * get exercise list
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return List<Exercise>
+     */
+    public List<Exercise> getExerciseList(int userId, Date dateFrom, Date dateTo) {
+        return consumptionRepository.getExerciseList(userId, dateFrom, dateTo);
     }
 }

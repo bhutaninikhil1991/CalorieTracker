@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     @ReadOnly
-    public List<Consumption> getUserConsumptions(@NotNull Integer userId, LocalDate consumptionDate) {
+    public List<Consumption> getUserConsumptions(@NotNull Integer userId, Date consumptionDate) {
         return entityManager.createQuery("SELECT c FROM Consumption AS c WHERE c.creator.id =: creator_id and c.consumptionDate =: consumption_date", Consumption.class)
                 .setParameter("creator_id", userId)
                 .setParameter("consumption_date", consumptionDate)
@@ -86,7 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     @ReadOnly
-    public Exercise getUserExercise(@NotNull Integer userId, LocalDate exerciseDate) {
+    public Exercise getUserExercise(@NotNull Integer userId, Date exerciseDate) {
         return entityManager.createQuery("SELECT e FROM Exercise AS e WHERE e.creator.id =: creator_id and e.exerciseDate =: exercise_date", Exercise.class)
                 .setParameter("creator_id", userId)
                 .setParameter("exercise_date", exerciseDate)

@@ -2,7 +2,6 @@ package controllers;
 
 import Service.*;
 import calorieapp.HTTPSingleResponse;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,7 +19,7 @@ import utils.HelperUtils;
 import utils.USDAAPIClient;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -262,7 +261,7 @@ public class CalorieController {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         try {
-            LocalDate date = LocalDate.parse(consumptionDate);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(consumptionDate);
             List<Consumption> userConsumptions = userService.getUserConsumptions(userId, date);
             map.put(String.valueOf(userId), userConsumptions);
             response.success = true;
@@ -391,7 +390,7 @@ public class CalorieController {
         HTTPSingleResponse response = new HTTPSingleResponse();
         HashMap<String, Object> map = new HashMap<>();
         try {
-            LocalDate date = LocalDate.parse(exerciseDate);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(exerciseDate);
             Exercise exercise = userService.getUserExercise(userId, date);
             response.success = true;
             map.put(String.valueOf(userId), exercise);
@@ -402,6 +401,31 @@ public class CalorieController {
         } catch (Exception ex) {
             response.success = false;
             response.errorMessage = "unable to fetch exercise record for userId:" + userId + " and exerciseDate:" + exerciseDate;
+            HelperUtils.logErrorMessage(response.errorMessage, ex);
+        }
+        return response;
+    }
+
+    /**
+     * get user statistics from given range
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return HTTPSingleResponse
+     */
+    @Get("/stats")
+    public HTTPSingleResponse getStatistics(int userId, String dateFrom, String dateTo) {
+        HTTPSingleResponse response = new HTTPSingleResponse();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
+            Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
+            Map<Date, Map<String, Long>> userConsumptions = userFoodConsumptionService.getConsumptionInGivenRange(userId, fromDate, toDate);
+            Map<Date, Exercise> userExercises = userFoodConsumptionService.getExerciseInGivenRange(userId, fromDate, toDate);
+        } catch (Exception ex) {
+            response.success = false;
+            response.errorMessage = "unable to fetch statistics for userId:" + userId + " from date:" + dateFrom + " to date:" + dateTo;
             HelperUtils.logErrorMessage(response.errorMessage, ex);
         }
         return response;

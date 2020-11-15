@@ -4,11 +4,9 @@ import com.google.gson.JsonObject;
 import models.*;
 
 import javax.inject.Singleton;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * user food consumption service
@@ -38,7 +36,7 @@ public class UserFoodConsumptionService {
      * @param consumptionObject
      * @return Consumption
      */
-    public Consumption extractConsumptionData(JsonObject consumptionObject) {
+    public Consumption extractConsumptionData(JsonObject consumptionObject) throws ParseException {
         if (consumptionObject == null)
             return null;
 
@@ -78,7 +76,7 @@ public class UserFoodConsumptionService {
 
         //extract consumption date
         String stringDate = consumptionObject.get("consumptionDate").getAsString();
-        LocalDate consumptionDate = LocalDate.parse(stringDate);
+        Date consumptionDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
 
         //create consumption object with new serving and quantity or
         // select existing one if it exists and update the selected serving and quantity
@@ -133,13 +131,13 @@ public class UserFoodConsumptionService {
      * @param exerciseObject
      * @return Exercise
      */
-    public Exercise saveOrUpdateExercise(int userId, JsonObject exerciseObject) {
+    public Exercise saveOrUpdateExercise(int userId, JsonObject exerciseObject) throws ParseException {
         User user = userService.findUserById(userId);
         Integer exerciseId = -1;
         Exercise exercise;
         int caloriesBurned = exerciseObject.get("caloriesBurned").getAsInt();
         String stringDate = exerciseObject.get("exerciseDate").getAsString();
-        LocalDate exerciseDate = LocalDate.parse(stringDate);
+        Date exerciseDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
         if (exerciseObject.has("id"))
             exerciseId = exerciseObject.get("id").getAsInt();
 
@@ -151,5 +149,62 @@ public class UserFoodConsumptionService {
         }
         Exercise newExercise = consumptionService.saveOrUpdateExercise(exercise);
         return newExercise;
+    }
+
+    /**
+     * get consumptions in giver range
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return Map<Date, Map < String, Long>>
+     * @throws Exception
+     */
+    public Map<Date, Map<String, Long>> getConsumptionInGivenRange(int userId, Date dateFrom, Date dateTo) throws Exception {
+        Map<Date, Map<String, Long>> nutrientTotals = new HashMap<>();
+        List<Consumption> consumptions = consumptionService.getConsumptionList(userId, dateFrom, dateTo);
+        if (consumptions.size() > 0) {
+            for (Consumption consumption : consumptions) {
+                nutrientTotals.putIfAbsent(consumption.getConsumptionDate(), new HashMap<>());
+                updateNutrientMap(nutrientTotals.get(consumption.getConsumptionDate()), consumption);
+            }
+        }
+        return nutrientTotals;
+    }
+
+    /**
+     * method to count nutrient totals
+     *
+     * @param nestedMap
+     * @param consumption
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    private void updateNutrientMap(Map<String, Long> nestedMap, Consumption consumption) throws NoSuchFieldException, IllegalAccessException {
+        for (Goal.GoalCategory category :
+                Goal.GoalCategory.values()) {
+            nestedMap.putIfAbsent(category.toString().toLowerCase(), new Long(0));
+            Long count = nestedMap.get(category.toString().toLowerCase()) + consumption.calculateCategoryValue(category);
+            nestedMap.put(category.toString().toLowerCase(), count);
+        }
+    }
+
+    /**
+     * get exercise in given range
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return Map<Date, Exercise>
+     */
+    public Map<Date, Exercise> getExerciseInGivenRange(int userId, Date dateFrom, Date dateTo) {
+        Map<Date, Exercise> map = new HashMap<>();
+        List<Exercise> exercises = consumptionService.getExerciseList(userId, dateFrom, dateTo);
+        if (exercises.size() > 0) {
+            for (Exercise exercise : exercises) {
+                map.put(exercise.getExerciseDate(), exercise);
+            }
+        }
+        return map;
     }
 }

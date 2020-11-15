@@ -9,6 +9,8 @@ import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Singleton
@@ -69,5 +71,25 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
             entityManager.persist(exercise);
         }
         return exercise;
+    }
+
+    @Override
+    @ReadOnly
+    public List<Consumption> getConsumptionList(@NotNull Integer userId, Date dateFrom, Date dateTo) {
+        return entityManager.createQuery("SELECT c FROM Consumption AS c WHERE c.creator.id =: creator_id and c.consumptionDate BETWEEN :from_date and :to_date ORDER BY c.consumptionDate DESC ", Consumption.class)
+                .setParameter("creator_id", userId)
+                .setParameter("from_date", dateFrom)
+                .setParameter("to_date", dateTo)
+                .getResultList();
+    }
+
+    @Override
+    @ReadOnly
+    public List<Exercise> getExerciseList(@NotNull Integer userId, Date dateFrom, Date dateTo) {
+        return entityManager.createQuery("SELECT e FROM Exercise AS e WHERE e.creator.id =: creator_id and e.exerciseDate BETWEEN :from_date and :to_date ORDER BY e.exerciseDate DESC ", Exercise.class)
+                .setParameter("creator_id", userId)
+                .setParameter("from_date", dateFrom)
+                .setParameter("to_date", dateTo)
+                .getResultList();
     }
 }

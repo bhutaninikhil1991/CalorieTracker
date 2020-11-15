@@ -94,6 +94,7 @@ class FoodsPanel extends Component {
                 </span>
             );
         }
+        
         return (
             <div className="FoodsPanel">
                 <div className="FoodsPanel__tabs">
@@ -102,7 +103,7 @@ class FoodsPanel extends Component {
                     <span
                         className={"FoodsPanel__tab--myFoods" + (this.props.currentTab === 1 ? ' current' : '')}
                         onClick={this.handleSwitchTab.bind(this)}>My Foods</span>
-                    <Link to={'/createfood'}>
+                    <Link to={'/createfood?day=' + this.props.day}>
                         <span
                             className={"FoodsPanel__tab--createFoodButton small-button" + (this.props.currentTab === 1 ? ' current' : '')}>Create Food</span>
                     </Link>
