@@ -2,9 +2,7 @@ package controllers;
 
 import Service.*;
 import calorieapp.HTTPSingleResponse;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -421,8 +419,10 @@ public class CalorieController {
         try {
             Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
             Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
-            Map<Date, Map<String, Long>> userConsumptions = userFoodConsumptionService.getConsumptionInGivenRange(userId, fromDate, toDate);
-            Map<Date, Integer> userExercises = userFoodConsumptionService.getExerciseInGivenRange(userId, fromDate, toDate);
+            JsonObject object = userFoodConsumptionService.getStatisticsForGivenRange(userId, fromDate, toDate);
+            response.success = true;
+            map.put(String.valueOf(userId), new Gson().toJson(object));
+            response.data = map;
         } catch (Exception ex) {
             response.success = false;
             response.errorMessage = "unable to fetch statistics for userId:" + userId + " from date:" + dateFrom + " to date:" + dateTo;

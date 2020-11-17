@@ -1,6 +1,6 @@
 package Service;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import models.*;
 
 import javax.inject.Singleton;
@@ -160,8 +160,8 @@ public class UserFoodConsumptionService {
      * @return Map<Date, Map < String, Long>>
      * @throws Exception
      */
-    public Map<Date, Map<String, Long>> getConsumptionInGivenRange(int userId, Date dateFrom, Date dateTo) throws Exception {
-        Map<Date, Map<String, Long>> nutrientTotals = new HashMap<>();
+    private Map<Date, Map<Goal.GoalCategory, Long>> getConsumptionInGivenRange(int userId, Date dateFrom, Date dateTo) throws Exception {
+        Map<Date, Map<Goal.GoalCategory, Long>> nutrientTotals = new HashMap<>();
         List<Consumption> consumptions = consumptionService.getConsumptionList(userId, dateFrom, dateTo);
         if (consumptions.size() > 0) {
             for (Consumption consumption : consumptions) {
@@ -180,12 +180,12 @@ public class UserFoodConsumptionService {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    private void updateNutrientMap(Map<String, Long> nestedMap, Consumption consumption) throws NoSuchFieldException, IllegalAccessException {
+    private void updateNutrientMap(Map<Goal.GoalCategory, Long> nestedMap, Consumption consumption) throws NoSuchFieldException, IllegalAccessException {
         for (Goal.GoalCategory category :
                 Goal.GoalCategory.values()) {
-            nestedMap.putIfAbsent(category.toString().toLowerCase(), new Long(0));
-            Long count = nestedMap.get(category.toString().toLowerCase()) + consumption.calculateCategoryValue(category);
-            nestedMap.put(category.toString().toLowerCase(), count);
+            nestedMap.putIfAbsent(category, new Long(0));
+            Long count = nestedMap.get(category) + consumption.calculateCategoryValue(category);
+            nestedMap.put(category, count);
         }
     }
 
@@ -195,16 +195,51 @@ public class UserFoodConsumptionService {
      * @param userId
      * @param dateFrom
      * @param dateTo
-     * @return Map<Date, Exercise>
+     * @return Map<Date, Long>
      */
-    public Map<Date, Integer> getExerciseInGivenRange(int userId, Date dateFrom, Date dateTo) {
-        Map<Date, Integer> map = new HashMap<>();
+    private Map<Date, Long> getExerciseInGivenRange(int userId, Date dateFrom, Date dateTo) {
+        Map<Date, Long> map = new HashMap<>();
         List<Exercise> exercises = consumptionService.getExerciseList(userId, dateFrom, dateTo);
         if (exercises.size() > 0) {
             for (Exercise exercise : exercises) {
-                map.put(exercise.getExerciseDate(), exercise.getCaloriesBurned());
+                map.put(exercise.getExerciseDate(), new Long(exercise.getCaloriesBurned()));
             }
         }
         return map;
+    }
+
+    /**
+     * get statistics
+     *
+     * @param userId
+     * @param dateFrom
+     * @param dateTo
+     * @return JsonObject
+     * @throws Exception
+     */
+    public JsonObject getStatisticsForGivenRange(int userId, Date dateFrom, Date dateTo) throws Exception {
+        JsonObject response = new JsonObject();
+        JsonArray arr = new JsonArray();
+        Map<Date, Map<Goal.GoalCategory, Long>> nutrientTotals = getConsumptionInGivenRange(userId, dateFrom, dateTo);
+        Map<Date, Long> exerciseTotals = getExerciseInGivenRange(userId, dateFrom, dateTo);
+        Calendar start = Calendar.getInstance();
+        start.setTime(dateFrom);
+        Calendar end = Calendar.getInstance();
+        end.setTime(dateTo);
+        while (start.before(end)) {
+            JsonObject nestedObject = new JsonObject();
+            Map<Goal.GoalCategory, Long> nutrients = nutrientTotals.get(start.getTime());
+            Long caloriesBurned = exerciseTotals.get(start.getTime());
+            nestedObject.addProperty("date", start.getTime().toString());
+            nestedObject.addProperty("netCalories", String.valueOf(nutrients != null ? nutrients.get(Goal.GoalCategory.CALORIES) : 0));
+            nestedObject.addProperty("carbohydrates", nutrients != null ? nutrients.get(Goal.GoalCategory.CARBOHYDRATES) : 0);
+            nestedObject.addProperty("fat", nutrients != null ? nutrients.get(Goal.GoalCategory.FAT) : 0);
+            nestedObject.addProperty("protein", nutrients != null ? nutrients.get(Goal.GoalCategory.PROTEIN) : 0);
+            nestedObject.addProperty("caloriesBurned", caloriesBurned != null ? caloriesBurned : 0);
+            arr.add(nestedObject);
+            start.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        response.add("statistics", arr);
+        return response;
     }
 }
