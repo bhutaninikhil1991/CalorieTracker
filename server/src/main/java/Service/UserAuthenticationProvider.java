@@ -40,7 +40,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
                 emitter.onError(new AuthenticationException(authenticationFailed.get()));
                 emitter.onComplete();
             } else {
-                emitter.onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));
+                emitter.onNext(new UserDetails(String.valueOf(user.getId()), new ArrayList<>()));
             }
         }, BackpressureStrategy.ERROR);
     }

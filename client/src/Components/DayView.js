@@ -6,6 +6,7 @@ import DaySelect from "./DaySelect";
 import ActivityInput from "./ActivityInput";
 import NetCalories from "./NetCalories";
 import {Link} from "react-router-dom";
+import {getUserId} from "./Helpers";
 
 /**
  * class displays a particular consumption date view
@@ -37,7 +38,7 @@ class DayView extends Component {
      */
     componentDidMount() {
         document.title = "Calorie App";
-        const userId = 1;
+        const userId = getUserId();
         this.getConsumptions(userId, this.state.selectedDay);
         this.getActivity(userId, this.state.selectedDay);
         this.getGoals(userId);
@@ -57,59 +58,71 @@ class DayView extends Component {
      */
     getConsumptions(userId, day) {
         let date = day.toISOString().split('T')[0];
-        fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${date}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                        .then(results => {
-                            this.setState({
-                                items: results.success && results.data !== undefined ? results.data[userId] : [],
-                                loadingItems: false
-                            });
+        fetch(`${SERVER_URL}/api/consumptions?userId=${userId}&consumptionDate=${date}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            if (response.ok) {
+                return response.json()
+                    .then(results => {
+                        this.setState({
+                            items: results.success && results.data !== undefined ? results.data[userId] : [],
+                            loadingItems: false
                         });
-                } else {
-                    alert("unable to load consumptions");
-                }
-            });
+                    });
+            } else {
+                alert("unable to load consumptions");
+            }
+        });
     }
 
     getActivity(userId, day) {
         let date = day.toISOString().split('T')[0];
-        fetch(`${SERVER_URL}/api/exercise?userId=${userId}&exerciseDate=${date}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                        .then(result => {
-                            let activity = result.success && result.data !== undefined ? result.data[userId] : [];
-                            if (activity.caloriesBurned === 0) {
-                                this.setState({caloriesBurned: undefined});
-                            } else {
-                                this.setState({caloriesBurned: activity.caloriesBurned});
-                            }
-                        });
-                } else {
-                    alert("unable to load exercises");
-                }
-            });
+        fetch(`${SERVER_URL}/api/exercise?userId=${userId}&exerciseDate=${date}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            if (response.ok) {
+                return response.json()
+                    .then(result => {
+                        let activity = result.success && result.data !== undefined ? result.data[userId] : [];
+                        if (activity.caloriesBurned === 0) {
+                            this.setState({caloriesBurned: undefined});
+                        } else {
+                            this.setState({caloriesBurned: activity.caloriesBurned});
+                        }
+                    });
+            } else {
+                alert("unable to load exercises");
+            }
+        });
     }
 
     getGoals(userId) {
-        fetch(`${SERVER_URL}/api/goals?userId=${userId}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                        .then(result => {
-                            let items = result.success && result.data !== undefined ? result.data[userId] : [];
-                            if (items.length <= 0)
-                                return;
-                            let goals = {};
-                            items.forEach((item) => {
-                                goals[item.goalCategory.toLowerCase()] = item.goalValue;
-                            });
-                            this.setState({goals: goals});
+        fetch(`${SERVER_URL}/api/goals?userId=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            if (response.ok) {
+                return response.json()
+                    .then(result => {
+                        let items = result.success && result.data !== undefined ? result.data[userId] : [];
+                        if (items.length <= 0)
+                            return;
+                        let goals = {};
+                        items.forEach((item) => {
+                            goals[item.goalCategory.toLowerCase()] = item.goalValue;
                         });
-                }
-            });
+                        this.setState({goals: goals});
+                    });
+            }
+        });
     }
 
     /**
@@ -117,7 +130,12 @@ class DayView extends Component {
      * @param consumptionId
      */
     removeItem(consumptionId) {
-        fetch(`${SERVER_URL}/api/consumptions/delete/${consumptionId}`, {method: 'POST'})
+        fetch(`${SERVER_URL}/api/consumptions/delete/${consumptionId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        })
             .then(response => {
                 if (response.ok) {
                     let item = this.state.items.find(consumption => consumption.id === consumptionId);
@@ -137,7 +155,7 @@ class DayView extends Component {
      * @param updatedConsumption
      */
     handleServingUpdate(updatedConsumption) {
-        const userId = 1;
+        const userId = getUserId();
         let consumption = this.state.items.find(consumption => consumption.id === updatedConsumption.id)
         let consumptionIndex = this.state.items.indexOf(consumption);
 
@@ -154,7 +172,10 @@ class DayView extends Component {
 
         fetch(`${SERVER_URL}/api/consumptions/update`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {
@@ -175,7 +196,7 @@ class DayView extends Component {
      * @param newDay
      */
     changeSelectedDay(newDay) {
-        const userId = 1;
+        const userId = getUserId();
         this.setState({
             selectedDay: newDay
         }, () => {
@@ -187,7 +208,7 @@ class DayView extends Component {
     handleActivityChange(calories) {
         let caloriesInt = parseInt(calories);
         this.setState({caloriesBurned: calories});
-        const userId = 1;
+        const userId = getUserId();
         //to fix issue with multiple post request
         if (this.apiPostTimeout) {
             clearTimeout(this.apiPostTimeout);
@@ -208,7 +229,10 @@ class DayView extends Component {
 
         fetch(`${SERVER_URL}/api/exercise/${userId}`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {

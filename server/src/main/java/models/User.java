@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String emailAddress;
+    @JsonIgnore
     private String password;
 
     @OneToMany(
@@ -122,6 +124,10 @@ public class User {
         this.id = id;
         this.emailAddress = emailAddress;
         this.password = password;
+        userCreatedFoods = new ArrayList<>();
+        userConsumptions = new ArrayList<>();
+        userGoals = new ArrayList<>();
+        exercises = new ArrayList<>();
     }
 
     /**
@@ -150,8 +156,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", emailAddress='" + emailAddress + '\'' +
-                ", password='" + password + '\'' +
-                ", userCreatedFoods=" + userCreatedFoods +
                 '}';
     }
 }

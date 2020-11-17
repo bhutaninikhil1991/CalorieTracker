@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {SERVER_URL} from "../config";
+import {getUserId} from "./Helpers";
 
 class MyGoals extends Component {
     constructor(props) {
@@ -17,32 +18,36 @@ class MyGoals extends Component {
     }
 
     componentDidMount() {
-        const userId = 1;
+        const userId = getUserId();
         this.getGoals(userId);
     }
 
     getGoals(userId) {
-        fetch(`${SERVER_URL}/api/goals?userId=${userId}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                        .then(results => {
-                            let items = results.success && results.data !== undefined ? results.data[userId] : [];
-                            if (items.length <= 0)
-                                return;
-                            let goals = {};
-                            items.forEach((item) => {
-                                goals[item.goalCategory.toLowerCase()] = item.goalValue;
-                            });
-                            this.setState({goals: goals});
+        fetch(`${SERVER_URL}/api/goals?userId=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            if (response.ok) {
+                return response.json()
+                    .then(results => {
+                        let items = results.success && results.data !== undefined ? results.data[userId] : [];
+                        if (items.length <= 0)
+                            return;
+                        let goals = {};
+                        items.forEach((item) => {
+                            goals[item.goalCategory.toLowerCase()] = item.goalValue;
                         });
-                }
-            });
+                        this.setState({goals: goals});
+                    });
+            }
+        });
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        const userId = 1;
+        const userId = getUserId();
         this.setState({saving: true})
         let goalsObj = {
             calories: parseInt(e.target[0].value),
@@ -56,7 +61,10 @@ class MyGoals extends Component {
 
         fetch(`${SERVER_URL}/api/goals/${userId}`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {

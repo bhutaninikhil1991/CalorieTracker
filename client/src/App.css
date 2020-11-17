@@ -779,6 +779,20 @@ span.FoodsPanel__edit-foods--done-link:hover {
     text-decoration: none;
 }
 
+.LoginView__notify {
+    display: block;
+    width: 70%;
+    margin: 20px auto;
+    padding: 20px 0 20px 30px;
+    border-radius: 5px;
+    color: #222722;
+}
+
+.LoginView__error {
+    background-color: rgba(191, 35, 23, 0.1);
+    border: 2px solid #c22317;
+}
+
 .MyGoals__form--input {
     width: 25%;
     float: left;

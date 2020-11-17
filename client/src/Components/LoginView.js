@@ -9,13 +9,13 @@ class LoginView extends Component {
             registering: false,
             email: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            finishedRegistering: false
         }
     }
 
     handleSubmit(e) {
         e.preventDefault();
-
         const reqObj = {
             username: this.state.email,
             password: this.state.password
@@ -28,14 +28,27 @@ class LoginView extends Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(reqObj)
-            }).then(response => {
-                alert(response);
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json().then(result => {
+                        if (result.success === true) {
+                            this.setState({
+                                finishedRegistering: true,
+                                errorMessage: ''
+                            });
+                        } else {
+                            this.setState({
+                                errorMessage: result.errorMessage
+                            });
+                        }
+                    });
+                }
             });
         } else {
             fetch(`${SERVER_URL}/login`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(reqObj)
             }).then((response) => {
@@ -43,12 +56,17 @@ class LoginView extends Component {
                     return response.json()
                         .then(result => {
                             localStorage.setItem("token", result.access_token);
+                            this.setState({
+                                errorMessage: ''
+                            });
                             window.location = "/";
                         });
                 } else {
-                    this.setState({
-                        errorMessage: response.message
-                    })
+                    return response.json().then(result => {
+                        this.setState({
+                            errorMessage: result.message
+                        });
+                    });
                 }
             });
         }
@@ -68,7 +86,8 @@ class LoginView extends Component {
 
     switchActionType() {
         this.setState(prevState => ({
-            registering: !prevState.registering
+            registering: !prevState.registering,
+            errorMessage: ''
         }));
     }
 
@@ -84,12 +103,19 @@ class LoginView extends Component {
         let switchText;
 
         if (this.state.registering) {
-            switchText = (
-                <span className="LoginView_form--switch">
+            if (this.state.finishedRegistering) {
+                switchText = (
+                    <span className="LoginView_form--switch">You have been successfully registered. Please <span
+                        onClick={this.switchActionType.bind(this)}>login</span> to access your account.</span>
+                );
+            } else {
+                switchText = (
+                    <span className="LoginView_form--switch">
                   You are registering a new account. If you already have one, you can <span
-                    onClick={this.switchActionType.bind(this)}>login</span>.
+                        onClick={this.switchActionType.bind(this)}>login</span>.
               </span>
-            );
+                );
+            }
         } else {
             switchText = (
                 <span className="LoginView_form--switch">
@@ -116,6 +142,10 @@ class LoginView extends Component {
                         {submitButton}
                     </form>
                 </div>
+
+                {this.state.errorMessage &&
+                <span className="LoginView__notify LoginView__error">{this.state.errorMessage}</span>}
+
                 {switchText}
             </div>
         );

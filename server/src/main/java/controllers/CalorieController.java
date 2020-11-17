@@ -422,7 +422,7 @@ public class CalorieController {
             Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
             Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
             Map<Date, Map<String, Long>> userConsumptions = userFoodConsumptionService.getConsumptionInGivenRange(userId, fromDate, toDate);
-            Map<Date, Exercise> userExercises = userFoodConsumptionService.getExerciseInGivenRange(userId, fromDate, toDate);
+            Map<Date, Integer> userExercises = userFoodConsumptionService.getExerciseInGivenRange(userId, fromDate, toDate);
         } catch (Exception ex) {
             response.success = false;
             response.errorMessage = "unable to fetch statistics for userId:" + userId + " from date:" + dateFrom + " to date:" + dateTo;

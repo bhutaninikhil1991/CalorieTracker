@@ -12,29 +12,34 @@ import LoginView from "./Components/LoginView";
 import MyGoals from "./Components/MyGoals";
 import Header from "./Components/Header";
 import StatisticsView from "./Components/StatisticsView";
+import PrivateRoute from "./Components/PrivateRoute";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            isUserLoggedIn: localStorage.getItem("token") !== null
+        }
     }
 
     render() {
-        let location = document.location.href;
-        let onLoginPage = location.includes("login");
-
         return (
             <div className="App">
                 <Router>
-                    {!onLoginPage && <Header/>}
+                    {this.state.isUserLoggedIn && <Header/>}
                     <Switch>
                         <Route exact path="/login" component={LoginView}/>
-                        <Route exact path="/" component={DayView}/>
-                        <Route exact path="/add" component={FoodViewContainer}/>
-                        <Route exact path="/createfood" component={CreateFoodView}/>
-                        <Route exact path="/goal" component={MyGoals}/>
-                        <Route exact path="/stats" component={StatisticsView}/>
+                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/"
+                                      component={DayView}/>
+                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/add"
+                                      component={FoodViewContainer}/>
+                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/createfood"
+                                      component={CreateFoodView}/>
+                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/goal"
+                                      component={MyGoals}/>
+                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/stats"
+                                      component={StatisticsView}/>
                     </Switch>
                 </Router>
             </div>

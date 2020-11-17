@@ -5,6 +5,7 @@ import ServingSize from "./ServingSize";
 import ItemDeleteButton from "./ItemDeleteButton";
 import plusIcon from "../resources/plus-icon.png";
 import trashIcon from "../resources/trash-icon.png";
+import {getUserId} from "./Helpers";
 
 /**
  * food item class
@@ -62,20 +63,24 @@ class AddableFoodItem extends Component {
         if (!this.props.editMode) {
             if (!this.state.adding && !this.state.item) {
                 this.setState({loading: true});
-                fetch(`${SERVER_URL}/api/foods?fdcId=${this.props.item.id}`)
-                    .then((response) => {
-                        if (response.ok) {
-                            response.json()
-                                .then(item => {
-                                    let processedItem = item.success ? this.setDefaultServing(item.data[this.props.item.id]) : null;
-                                    this.setState({
-                                        adding: true,
-                                        item: processedItem,
-                                        loading: false
-                                    });
+                fetch(`${SERVER_URL}/api/foods?fdcId=${this.props.item.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then((response) => {
+                    if (response.ok) {
+                        response.json()
+                            .then(item => {
+                                let processedItem = item.success ? this.setDefaultServing(item.data[this.props.item.id]) : null;
+                                this.setState({
+                                    adding: true,
+                                    item: processedItem,
+                                    loading: false
                                 });
-                        }
-                    });
+                            });
+                    }
+                });
             } else {
                 this.setState(prevState => ({
                     adding: !prevState.adding
@@ -139,7 +144,7 @@ class AddableFoodItem extends Component {
      * add consumption
      */
     addConsumption() {
-        const userId = 1;
+        const userId = getUserId();
         let consumption = {
             foodItem: JSON.parse(JSON.stringify(this.state.item)),
             selectedServing: JSON.parse(JSON.stringify(this.state.selectedServing)),
@@ -153,7 +158,10 @@ class AddableFoodItem extends Component {
 
         fetch(`${SERVER_URL}/api/consumptions`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("token")
+            },
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {

@@ -197,12 +197,12 @@ public class UserFoodConsumptionService {
      * @param dateTo
      * @return Map<Date, Exercise>
      */
-    public Map<Date, Exercise> getExerciseInGivenRange(int userId, Date dateFrom, Date dateTo) {
-        Map<Date, Exercise> map = new HashMap<>();
+    public Map<Date, Integer> getExerciseInGivenRange(int userId, Date dateFrom, Date dateTo) {
+        Map<Date, Integer> map = new HashMap<>();
         List<Exercise> exercises = consumptionService.getExerciseList(userId, dateFrom, dateTo);
         if (exercises.size() > 0) {
             for (Exercise exercise : exercises) {
-                map.put(exercise.getExerciseDate(), exercise);
+                map.put(exercise.getExerciseDate(), exercise.getCaloriesBurned());
             }
         }
         return map;

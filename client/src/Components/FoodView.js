@@ -3,6 +3,7 @@ import SearchFood from "./SearchFood";
 import {SERVER_URL} from "../config";
 import update from "immutability-helper"
 import FoodsPanel from "./FoodsPanel";
+import {getUserId} from "./Helpers";
 
 /**
  * food view class
@@ -77,31 +78,39 @@ class FoodView extends Component {
     }
 
     searchItems(searchFoodItem) {
-        fetch(`${SERVER_URL}/api/foods/search?query=${searchFoodItem}`)
-            .then((response) => {
-                if (response.ok) {
-                    response.json()
-                        .then(results => {
-                            this.setState({
-                                searchResults: results.success ? results.data[searchFoodItem] : [],
-                                searchError: false
-                            });
+        fetch(`${SERVER_URL}/api/foods/search?query=${searchFoodItem}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json()
+                    .then(results => {
+                        this.setState({
+                            searchResults: results.success ? results.data[searchFoodItem] : [],
+                            searchError: false
                         });
-                } else {
-                    this.setState({
-                        searchError: true
                     });
-                }
-            });
+            } else {
+                this.setState({
+                    searchError: true
+                });
+            }
+        });
     }
 
     /**
      * get user created food items
      */
     getUserFoods() {
-        const userId = 1;
-        fetch(`${SERVER_URL}/api/foods/user?userId=${userId}`)
-            .then((response) => response.json())
+        const userId = getUserId();
+        fetch(`${SERVER_URL}/api/foods/user?userId=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
+        }).then((response) => response.json())
             .then(results => {
                 this.setState({myFoods: results.success ? results.data[userId] : []})
             });
@@ -113,7 +122,10 @@ class FoodView extends Component {
      */
     deleteUserFoodItem(foodItemId) {
         fetch(`${SERVER_URL}/api/foods/remove/${foodItemId}`, {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            }
         }).then(response => {
             if (response.ok) {
                 let foodItem = this.state.myFoods.find(food => food.id === foodItemId);

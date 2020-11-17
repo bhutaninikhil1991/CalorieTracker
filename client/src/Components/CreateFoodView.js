@@ -5,6 +5,7 @@ import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
 import {Link} from "react-router-dom";
 import qs from 'qs';
+import {getUserId} from "./Helpers";
 
 /**
  * class allows user to create food items
@@ -18,7 +19,7 @@ class CreateFoodView extends Component {
         const qsParsed = qs.parse(document.location.search.slice(1));
         let day = qsParsed.day;
         e.preventDefault();
-        const userId = 1;
+        const userId = getUserId();
         const servingSize = {
             servingAmount: (e.target[1].value.split(' '))[0],
             servingLabel: (e.target[1].value.split(' '))[1]
@@ -35,7 +36,10 @@ class CreateFoodView extends Component {
         };
         fetch(`${SERVER_URL}/api/foods/${userId}`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {

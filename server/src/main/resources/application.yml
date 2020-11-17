@@ -15,13 +15,50 @@ micronaut:
     endpoints:
       login:
         enabled: true
+      logout:
+        enabled: false
+      oauth:
+        enabled: false
     token:
       jwt:
+        cookie:
+          enabled: false
+        generator:
+          access-token:
+            expiration: 18000 # 5 hours expiration
         signatures:
           secret:
             generator:
               secret: R9oRMFeBWaxfJIolWPfDWEZHzkLBsWefDtavyWWI
-    enabled: false
+    enabled: true
+    intercept-url-map:
+      - pattern: /
+        access:
+          - isAnonymous()
+      - pattern: /**/resources/**
+        access:
+          - isAnonymous()
+      - pattern: /**/static/**
+        access:
+          - isAnonymous()
+      - pattern: /**/css/**
+        access:
+          - isAnonymous()
+      - pattern: /**/js/**
+        access:
+          - isAnonymous()
+      - pattern: /service-worker.js
+        access:
+          - isAnonymous()
+      - pattern: /manifest.json
+        access:
+          - isAnonymous()
+      - pattern: /*.png
+        access:
+          - isAnonymous()
+      - pattern: /**/favicon.ico/**
+        access:
+          - isAnonymous()
 
 datasources:
   default:
