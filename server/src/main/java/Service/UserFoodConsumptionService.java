@@ -230,8 +230,9 @@ public class UserFoodConsumptionService {
             JsonObject nestedObject = new JsonObject();
             Map<Goal.GoalCategory, Long> nutrients = nutrientTotals.get(start.getTime());
             Long caloriesBurned = exerciseTotals.get(start.getTime());
-            nestedObject.addProperty("date", start.getTime().toString());
-            nestedObject.addProperty("netCalories", String.valueOf(nutrients != null ? nutrients.get(Goal.GoalCategory.CALORIES) : 0));
+            String displayDate = new SimpleDateFormat("EEEE, MMMMM d").format(start.getTime());
+            nestedObject.addProperty("date", displayDate);
+            nestedObject.addProperty("netCalories", nutrients != null ? nutrients.get(Goal.GoalCategory.CALORIES) : 0);
             nestedObject.addProperty("carbohydrates", nutrients != null ? nutrients.get(Goal.GoalCategory.CARBOHYDRATES) : 0);
             nestedObject.addProperty("fat", nutrients != null ? nutrients.get(Goal.GoalCategory.FAT) : 0);
             nestedObject.addProperty("protein", nutrients != null ? nutrients.get(Goal.GoalCategory.PROTEIN) : 0);

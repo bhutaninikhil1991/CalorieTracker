@@ -13,6 +13,7 @@ class Header extends Component {
                 <div className="container header-container">
                     <nav>
                         <Link to={"/"}>Home</Link>
+                        <Link to={"/stats"}>Dashboard</Link>
                         <Link to={"/goal"}>Goals</Link>
                         <Link onClick={this.logUserOut.bind(this)}>Log out</Link>
                     </nav>

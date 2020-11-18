@@ -990,3 +990,92 @@ span.ActivityInput__calsLabel.active {
 .DayView__caloriesGoal a:hover {
     text-decoration: none;
 }
+
+.StatisticsView .page-title {
+    width: 254px;
+    float: left;
+}
+
+.StatisticsView__week-select {
+    width: 600px;
+    float: left;
+}
+
+.StatisticsView .DayPickerInput input {
+    width: 120px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.StatisticsView__refresh-button {
+    width: 26px;
+    position: relative;
+    bottom: 2px;
+    left: 14px;
+    cursor: pointer;
+}
+
+.StatisticsView__refresh-button.inactive {
+    cursor: default;
+}
+
+.StatsTable {
+    margin: 30px 0 80px 0;
+}
+
+.StatsTable .StatsTable_header {
+    background: none;
+}
+
+.StatsTable .StatsTable_header--macros {
+    margin-left: 260px;
+}
+
+.StatsTable .StatsTable_header--calories img {
+    margin-left: 100px;
+    max-height: 26px;
+}
+
+.StatsTable .StatsTable_header--caloriesBurned img {
+    margin-left: 150px;
+    max-height: 26px;
+}
+
+.StatsTable .StatsTable_header--macros img {
+    margin-right: 70px;
+    max-height: 26px;
+}
+
+.StatsDayItem {
+    padding: 22px 30px 22px 30px;
+}
+
+.StatsDayItem__day {
+    width: 225px;
+    display: block;
+    float: left;
+}
+
+.StatsDayItem__macros {
+    display: block;
+    float: left;
+}
+
+.StatsDayItem__macros span {
+    width: 33px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 65px;
+}
+
+.StatsDayItem__macros span:last-child {
+    margin: 0;
+}
+
+.StatsDayItem__calories, .StatsDayItem__caloriesBurned {
+    float: right;
+    margin-left: 90px;
+    padding-right: 70px;
+    font-size: 18px;
+    font-weight: bold;
+}
