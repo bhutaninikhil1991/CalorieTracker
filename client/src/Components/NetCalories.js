@@ -1,5 +1,8 @@
 import React, {Component} from "react";
 
+/**
+ * calories calculation class
+ */
 class NetCalories extends Component {
 
     render() {

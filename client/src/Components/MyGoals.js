@@ -1,8 +1,17 @@
 import React, {Component} from "react";
 import {SERVER_URL} from "../config";
 import {getUserId} from "./Helpers";
+import {Link} from "react-router-dom";
 
+/**
+ * goal class
+ */
 class MyGoals extends Component {
+
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -17,11 +26,18 @@ class MyGoals extends Component {
         }
     }
 
+    /**
+     * initialize view
+     */
     componentDidMount() {
         const userId = getUserId();
         this.getGoals(userId);
     }
 
+    /**
+     * get user goals
+     * @param userId
+     */
     getGoals(userId) {
         fetch(`${SERVER_URL}/api/goals?userId=${userId}`, {
             method: 'GET',
@@ -45,6 +61,10 @@ class MyGoals extends Component {
         });
     }
 
+    /**
+     * handle form submit event
+     * @param e
+     */
     handleSubmit(e) {
         e.preventDefault();
         const userId = getUserId();
@@ -81,6 +101,10 @@ class MyGoals extends Component {
         });
     }
 
+    /**
+     * handle input change event
+     * @param e
+     */
     handleInputChange(e) {
         if (this.state.finishedSaving) {
             this.setState({finishedSaving: false})
@@ -130,6 +154,7 @@ class MyGoals extends Component {
                     </span>
                         <div className="clearfix"/>
                         {saveButton}
+                        <Link to={"/"} className="cancel-link">Cancel</Link>
                         {this.state.finishedSaving &&
                         <span className="MyGoals__form--save-success animated fadeIn" id="save-success-message">Your goals have been updated</span>}
                     </form>

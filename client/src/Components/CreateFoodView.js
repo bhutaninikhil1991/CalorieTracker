@@ -43,7 +43,7 @@ class CreateFoodView extends Component {
             body: JSON.stringify(reqObj)
         }).then(response => {
             if (response.ok) {
-                window.location = "/add?day=" + day + "&tab=1";
+                this.props.history.push(`/add?day=${day}&tab=1`);
             } else {
                 alert("unable to add food item")
             }

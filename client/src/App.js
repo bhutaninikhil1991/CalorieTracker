@@ -29,16 +29,16 @@ class App extends Component {
                 <Router>
                     {this.state.isUserLoggedIn && <Header/>}
                     <Switch>
-                        <Route exact path="/login" component={LoginView}/>
-                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/"
+                        <Route exact strict path="/login" component={LoginView}/>
+                        <PrivateRoute exact strict isUserAuthenticated={this.state.isUserLoggedIn} path="/"
                                       component={DayView}/>
-                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/add"
+                        <PrivateRoute exact strict isUserAuthenticated={this.state.isUserLoggedIn} path="/add"
                                       component={FoodViewContainer}/>
-                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/createfood"
+                        <PrivateRoute exact strict isUserAuthenticated={this.state.isUserLoggedIn} path="/createfood"
                                       component={CreateFoodView}/>
-                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/goal"
+                        <PrivateRoute exact strict isUserAuthenticated={this.state.isUserLoggedIn} path="/goal"
                                       component={MyGoals}/>
-                        <PrivateRoute exact isUserAuthenticated={this.state.isUserLoggedIn} path="/stats"
+                        <PrivateRoute exact strict isUserAuthenticated={this.state.isUserLoggedIn} path="/stats"
                                       component={StatisticsView}/>
                     </Switch>
                 </Router>

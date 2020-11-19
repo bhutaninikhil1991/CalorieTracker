@@ -6,6 +6,9 @@ import caloriesIcon from "../resources/calories.png";
 import caloriesBurnedIcon from "../resources/fire-emoji.png";
 import StatsDayItem from "./StatsDayItem";
 
+/**
+ * statistics table
+ */
 class StatsTable extends Component {
     render() {
         let statsDayItem;

@@ -2,6 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 class Header extends Component {
+    /**
+     * log user out
+     */
     logUserOut() {
         localStorage.removeItem("token");
         window.location = "/login";

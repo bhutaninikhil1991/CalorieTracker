@@ -94,7 +94,7 @@ class FoodsPanel extends Component {
                 </span>
             );
         }
-        
+
         return (
             <div className="FoodsPanel">
                 <div className="FoodsPanel__tabs">
@@ -123,7 +123,8 @@ class FoodsPanel extends Component {
 
                 {
                     this.props.currentTab === 0 &&
-                    <SearchResults searchResults={this.props.searchResults} day={this.props.day}/>
+                    <SearchResults searchResults={this.props.searchResults} day={this.props.day}
+                                   error={this.props.searchError}/>
                 }
                 {
                     this.props.currentTab === 1 &&

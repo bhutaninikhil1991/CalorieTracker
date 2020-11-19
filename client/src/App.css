@@ -999,6 +999,7 @@ span.ActivityInput__calsLabel.active {
 .StatisticsView__week-select {
     width: 600px;
     float: left;
+    margin-top: 14px;
 }
 
 .StatisticsView .DayPickerInput input {
@@ -1037,12 +1038,12 @@ span.ActivityInput__calsLabel.active {
 }
 
 .StatsTable .StatsTable_header--caloriesBurned img {
-    margin-left: 150px;
+    margin-left: 85px;
     max-height: 26px;
 }
 
 .StatsTable .StatsTable_header--macros img {
-    margin-right: 70px;
+    margin-right: 30px;
     max-height: 26px;
 }
 
@@ -1073,9 +1074,13 @@ span.ActivityInput__calsLabel.active {
 }
 
 .StatsDayItem__calories, .StatsDayItem__caloriesBurned {
-    float: right;
     margin-left: 90px;
-    padding-right: 70px;
     font-size: 18px;
     font-weight: bold;
+}
+
+.StatisticsView__no-consumption {
+    display: block;
+    margin-top: 60px;
+    text-align: center;
 }

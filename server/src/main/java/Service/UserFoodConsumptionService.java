@@ -226,6 +226,7 @@ public class UserFoodConsumptionService {
         start.setTime(dateFrom);
         Calendar end = Calendar.getInstance();
         end.setTime(dateTo);
+        end.add(Calendar.DATE, 1);
         while (start.before(end)) {
             JsonObject nestedObject = new JsonObject();
             Map<Goal.GoalCategory, Long> nutrients = nutrientTotals.get(start.getTime());
@@ -237,7 +238,8 @@ public class UserFoodConsumptionService {
             nestedObject.addProperty("fat", nutrients != null ? nutrients.get(Goal.GoalCategory.FAT) : 0);
             nestedObject.addProperty("protein", nutrients != null ? nutrients.get(Goal.GoalCategory.PROTEIN) : 0);
             nestedObject.addProperty("caloriesBurned", caloriesBurned != null ? caloriesBurned : 0);
-            arr.add(nestedObject);
+            if (nutrients != null || caloriesBurned != null)
+                arr.add(nestedObject);
             start.add(Calendar.DAY_OF_MONTH, 1);
         }
         response.add("statistics", arr);

@@ -7,6 +7,7 @@ import ActivityInput from "./ActivityInput";
 import NetCalories from "./NetCalories";
 import {Link} from "react-router-dom";
 import {getUserId} from "./Helpers";
+import qs from "qs";
 
 /**
  * class displays a particular consumption date view
@@ -39,8 +40,16 @@ class DayView extends Component {
     componentDidMount() {
         document.title = "Calorie App";
         const userId = getUserId();
-        this.getConsumptions(userId, this.state.selectedDay);
-        this.getActivity(userId, this.state.selectedDay);
+        const qsParsed = qs.parse(this.props.location.search.slice(1));
+        let day = qsParsed.day;
+        if (day) {
+            this.setState({
+                selectedDay: this.convertStringToDate(day)
+            });
+        }
+        let selectedDay = day ? this.convertStringToDate(day) : this.state.selectedDay
+        this.getConsumptions(userId, selectedDay);
+        this.getActivity(userId, selectedDay);
         this.getGoals(userId);
     }
 
@@ -50,6 +59,19 @@ class DayView extends Component {
      */
     getTodaysDate() {
         return new Date(Date.now() - (60000 * new Date().getTimezoneOffset()));
+    }
+
+    /**
+     * convert string to date
+     * @param date
+     * @returns {Date}
+     */
+    convertStringToDate(date) {
+        let arr = date.split('-');
+        let year = parseInt(arr[0]);
+        let month = parseInt(arr[1]) - 1;
+        let day = parseInt(arr[2]);
+        return new Date(year, month, day);
     }
 
     /**
@@ -78,6 +100,11 @@ class DayView extends Component {
         });
     }
 
+    /**
+     * get activity details
+     * @param userId
+     * @param day
+     */
     getActivity(userId, day) {
         let date = day.toISOString().split('T')[0];
         fetch(`${SERVER_URL}/api/exercise?userId=${userId}&exerciseDate=${date}`, {
@@ -102,6 +129,10 @@ class DayView extends Component {
         });
     }
 
+    /**
+     * get goals
+     * @param userId
+     */
     getGoals(userId) {
         fetch(`${SERVER_URL}/api/goals?userId=${userId}`, {
             method: 'GET',
@@ -205,6 +236,10 @@ class DayView extends Component {
         })
     }
 
+    /**
+     * handle activity change
+     * @param calories
+     */
     handleActivityChange(calories) {
         let caloriesInt = parseInt(calories);
         this.setState({caloriesBurned: calories});
@@ -216,6 +251,11 @@ class DayView extends Component {
         this.apiPostTimeout = setTimeout(() => this.saveActivity(userId, caloriesInt), 500);
     }
 
+    /**
+     * save activity
+     * @param userId
+     * @param calories
+     */
     saveActivity(userId, calories) {
         let calsBurned = calories ? calories : 0;
         const activityObj = {

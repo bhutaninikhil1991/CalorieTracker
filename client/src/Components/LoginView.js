@@ -1,8 +1,15 @@
 import React, {Component} from 'react'
 import {SERVER_URL} from "../config";
 
+/**
+ * login view
+ */
 class LoginView extends Component {
 
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -14,6 +21,10 @@ class LoginView extends Component {
         }
     }
 
+    /**
+     * handle form submit event
+     * @param e
+     */
     handleSubmit(e) {
         e.preventDefault();
         const reqObj = {
@@ -72,18 +83,29 @@ class LoginView extends Component {
         }
     }
 
+    /**
+     * handle email change event
+     * @param e
+     */
     handleEmailChange(e) {
         this.setState({
             email: e.target.value
         });
     }
 
+    /**
+     * handle password change event
+     * @param e
+     */
     handlePasswordChange(e) {
         this.setState({
             password: e.target.value
         });
     }
 
+    /**
+     * switch between registering and logging event
+     */
     switchActionType() {
         this.setState(prevState => ({
             registering: !prevState.registering,

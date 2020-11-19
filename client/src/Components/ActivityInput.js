@@ -1,8 +1,15 @@
 import React, {Component} from "react";
 import fireEmoji from "../resources/fire-emoji.png";
 
+/**
+ * exercise class
+ */
 class ActivityInput extends Component {
 
+    /**
+     * handle activity change
+     * @param e
+     */
     handleActivityChange(e) {
         this.props.handleActivityChange(e.target.value);
     }

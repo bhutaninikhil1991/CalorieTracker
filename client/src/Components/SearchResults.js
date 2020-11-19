@@ -7,7 +7,7 @@ import AddableFoodItem from "./AddableFoodItem";
 class SearchResults extends Component {
     render() {
         let searchResults;
-        if (this.props.error) {
+        if (this.props.error || this.props.searchResults.length <= 0) {
             searchResults = (
                 <p className="SearchResults__error">
                     Sorry, I can't find anything that matches your query. May be try something different?

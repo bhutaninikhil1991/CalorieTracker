@@ -2,7 +2,15 @@ import React, {Component} from "react";
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
+/**
+ * custom day selector class
+ */
 class DaySelect extends Component {
+
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -10,12 +18,22 @@ class DaySelect extends Component {
         }
     }
 
+    /**
+     * initialize the view
+     * @param prevProps
+     * @param prevState
+     * @param snapshot
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.pickerVisible) {
             document.body.addEventListener('click', this.handleClick.bind(this), true);
         }
     }
 
+    /**
+     * handle click event
+     * @param e
+     */
     handleClick(e) {
         if (document.querySelector('.DayPicker')) {
             if (!document.querySelector('.DayPicker').contains(e.target)) {
@@ -25,7 +43,9 @@ class DaySelect extends Component {
         }
     }
 
-    //change to day before event
+    /**
+     * change date before event
+     */
     changeToDayBefore() {
         let newDay = this.props.selectedDay;
         newDay.setDate(newDay.getDate() - 1);
@@ -33,14 +53,19 @@ class DaySelect extends Component {
         this.handleDayChange(newDay);
     }
 
-    //handle day change
+    /**
+     * handle day change
+     * @param day
+     */
     handleDayChange(day) {
         if (day > this.props.todaysDate)
             return;
         this.props.changeSelectedDay(day);
     }
 
-    //change to day after event
+    /**
+     * change date after event
+     */
     changeToDayAfter() {
         let newDay = this.props.selectedDay;
         newDay.setDate(newDay.getDate() + 1);
@@ -48,7 +73,10 @@ class DaySelect extends Component {
         this.handleDayChange(newDay);
     }
 
-    //to check if selected day is equal to current day
+    /**
+     * to check if selected day is equal to current day
+     * @returns {boolean}
+     */
     selectedDayIsToday() {
         return this.props.selectedDay.toISOString().split('T')[0] ===
             this.props.todaysDate.toISOString().split('T')[0];

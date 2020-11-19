@@ -1,5 +1,8 @@
 import React, {Component} from "react";
 
+/**
+ * holds statistics records
+ */
 class StatsDayItem extends Component {
     render() {
         return (

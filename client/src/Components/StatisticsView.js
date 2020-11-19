@@ -8,7 +8,15 @@ import {SERVER_URL} from "../config";
 import {getUserId} from "./Helpers";
 import StatsTable from "./StatsTable";
 
+/**
+ * statistics class
+ */
 class StatisticsView extends Component {
+
+    /**
+     * constructor
+     * @param props
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -19,6 +27,10 @@ class StatisticsView extends Component {
         }
     }
 
+    /**
+     * handle from day change event
+     * @param from
+     */
     handleFromDayChange(from) {
         this.setState({
             dayFrom: from,
@@ -26,6 +38,10 @@ class StatisticsView extends Component {
         });
     }
 
+    /**
+     * handle to day change event
+     * @param to
+     */
     handleToDayChange(to) {
         this.setState({
             dayTo: to,
@@ -33,6 +49,9 @@ class StatisticsView extends Component {
         });
     }
 
+    /**
+     * load statistics
+     */
     refreshStats() {
         const userId = getUserId();
         fetch(`${SERVER_URL}/api/stats?userId=${userId}&dateFrom=${this.state.dayFrom.toISOString().split('T')[0]}&dateTo=${this.state.dayTo.toISOString().split('T')[0]}`, {
@@ -66,11 +85,17 @@ class StatisticsView extends Component {
 
         let statsComponent;
         if (this.state.stats) {
-            statsComponent = (
-                <div>
-                    <StatsTable stats={this.state.stats}/>
-                </div>
-            );
+            if (this.state.stats.length > 0) {
+                statsComponent = (
+                    <div>
+                        <StatsTable stats={this.state.stats}/>
+                    </div>
+                );
+            } else {
+                statsComponent = (<span className="StatisticsView__no-consumption">
+                    Looks like you haven't consumed anything during this time period.
+                </span>)
+            }
         }
 
         return (
