@@ -15,7 +15,7 @@ class StatsTable extends Component {
         if (this.props.stats) {
             statsDayItem = this.props.stats.map(item => {
                 return <StatsDayItem
-                    date={item.date}
+                    date={item.displayDate}
                     calories={item.netCalories}
                     caloriesBurned={item.caloriesBurned}
                     carbohydrates={item.carbohydrates}

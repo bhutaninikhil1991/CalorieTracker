@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import update from "immutability-helper"
+import React, {Component} from 'react';
+import update from "immutability-helper";
 import {SERVER_URL} from "../config";
 import ServingSize from "./ServingSize";
 import ItemDeleteButton from "./ItemDeleteButton";

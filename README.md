@@ -22,5 +22,7 @@ https://micronaut-projects.github.io/micronaut-security/latest/guide/
 
 https://stackoverflow.com/questions/1196192/how-to-read-the-value-of-a-private-field-from-a-different-class-in-java
 
+https://stackoverflow.com/questions/49617486/how-to-use-lifecycle-method-getderivedstatefromprops-as-opposed-to-componentwill
+
 username: newuser@yahoo.com
 password: testing

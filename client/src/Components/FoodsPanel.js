@@ -5,6 +5,7 @@ import MyFoods from "./MyFoods";
 import carbsIcon from "../resources/bread-emoji.png";
 import fatIcon from "../resources/bacon-strip-emoji.png";
 import proteinIcon from "../resources/steak-emoji.png";
+import calorieIcon from "../resources/calories.png";
 
 /**
  * class responsible for creating panel
@@ -117,6 +118,9 @@ class FoodsPanel extends Component {
                         <img src={carbsIcon} alt="carbohydrates" title="carbohydrates"/>
                         <img src={fatIcon} alt="fat" title="fat"/>
                         <img src={proteinIcon} alt="protein" title="protein"/>
+                        </span>
+                        <span className="Consumption__header--caloriesTotal">
+                            <img src={calorieIcon} alt="calories" title="calories"/>
                         </span>
                     </div>
                 }

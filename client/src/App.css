@@ -1033,17 +1033,17 @@ span.ActivityInput__calsLabel.active {
 }
 
 .StatsTable .StatsTable_header--calories img {
-    margin-left: 100px;
+    margin-left: 30px;
     max-height: 26px;
 }
 
 .StatsTable .StatsTable_header--caloriesBurned img {
-    margin-left: 85px;
+    margin-left: 90px;
     max-height: 26px;
 }
 
 .StatsTable .StatsTable_header--macros img {
-    margin-right: 30px;
+    margin-right: 70px;
     max-height: 26px;
 }
 
@@ -1074,6 +1074,9 @@ span.ActivityInput__calsLabel.active {
 }
 
 .StatsDayItem__calories, .StatsDayItem__caloriesBurned {
+    width: 33px;
+    display: inline-block;
+    text-align: center;
     margin-left: 90px;
     font-size: 18px;
     font-weight: bold;

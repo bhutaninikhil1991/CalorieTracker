@@ -3,10 +3,10 @@ import moment from "moment";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import refreshIcon from "../resources/refresh-icon.png";
 import refreshIconInactive from "../resources/refresh-icon-inactive.png";
-import "react-day-picker/lib/style.css"
 import {SERVER_URL} from "../config";
 import {getUserId} from "./Helpers";
 import StatsTable from "./StatsTable";
+import LineChart from "./LineChart";
 
 /**
  * statistics class
@@ -89,6 +89,7 @@ class StatisticsView extends Component {
                 statsComponent = (
                     <div>
                         <StatsTable stats={this.state.stats}/>
+                        <LineChart from={this.state.dayFrom} to={this.state.dayTo} stats={this.state.stats}/>
                     </div>
                 );
             } else {

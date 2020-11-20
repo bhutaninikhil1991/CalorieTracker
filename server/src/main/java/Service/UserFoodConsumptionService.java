@@ -232,7 +232,9 @@ public class UserFoodConsumptionService {
             Map<Goal.GoalCategory, Long> nutrients = nutrientTotals.get(start.getTime());
             Long caloriesBurned = exerciseTotals.get(start.getTime());
             String displayDate = new SimpleDateFormat("EEEE, MMMMM d").format(start.getTime());
-            nestedObject.addProperty("date", displayDate);
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(start.getTime());
+            nestedObject.addProperty("date", date);
+            nestedObject.addProperty("displayDate", displayDate);
             nestedObject.addProperty("netCalories", nutrients != null ? nutrients.get(Goal.GoalCategory.CALORIES) : 0);
             nestedObject.addProperty("carbohydrates", nutrients != null ? nutrients.get(Goal.GoalCategory.CARBOHYDRATES) : 0);
             nestedObject.addProperty("fat", nutrients != null ? nutrients.get(Goal.GoalCategory.FAT) : 0);
