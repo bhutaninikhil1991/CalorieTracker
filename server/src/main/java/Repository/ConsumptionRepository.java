@@ -25,4 +25,6 @@ public interface ConsumptionRepository {
     List<Consumption> getConsumptionList(@NotNull Integer userId, Date dateFrom, Date dateTo);
 
     List<Exercise> getExerciseList(@NotNull Integer userId, Date dateFrom, Date dateTo);
+
+    Exercise getExercise(@NotNull Integer userId, Date exerciseDate);
 }

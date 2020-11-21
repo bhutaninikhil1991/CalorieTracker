@@ -75,6 +75,17 @@ public class ConsumptionService {
     }
 
     /**
+     * get exercise details
+     *
+     * @param userId
+     * @param exerciseDate
+     * @return Exercise
+     */
+    public Exercise getExercise(int userId, Date exerciseDate) {
+        return consumptionRepository.getExercise(userId, exerciseDate);
+    }
+
+    /**
      * get exercise by id
      *
      * @param exerciseId

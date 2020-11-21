@@ -133,15 +133,14 @@ public class UserFoodConsumptionService {
      */
     public Exercise saveOrUpdateExercise(int userId, JsonObject exerciseObject) throws ParseException {
         User user = userService.findUserById(userId);
-        Integer exerciseId = -1;
+
         Exercise exercise;
         int caloriesBurned = exerciseObject.get("caloriesBurned").getAsInt();
         String stringDate = exerciseObject.get("exerciseDate").getAsString();
         Date exerciseDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-        if (exerciseObject.has("id"))
-            exerciseId = exerciseObject.get("id").getAsInt();
 
-        if (exerciseId > 0) {
+        if (consumptionService.getExercise(userId, exerciseDate) != null) {
+            Integer exerciseId = consumptionService.getExercise(userId, exerciseDate).getId();
             exercise = consumptionService.getExerciseById(exerciseId);
             exercise.setCaloriesBurned(caloriesBurned);
         } else {

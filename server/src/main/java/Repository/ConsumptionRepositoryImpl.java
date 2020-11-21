@@ -92,4 +92,18 @@ public class ConsumptionRepositoryImpl implements ConsumptionRepository {
                 .setParameter("to_date", dateTo)
                 .getResultList();
     }
+
+    @Override
+    @ReadOnly
+    public Exercise getExercise(@NotNull Integer userId, Date exerciseDate) {
+        try {
+            Exercise exercise = entityManager.createQuery("SELECT e FROM Exercise AS e WHERE e.creator.id =: creator_id and e.exerciseDate =: exerciseDate", Exercise.class)
+                    .setParameter("creator_id", userId)
+                    .setParameter("exerciseDate", exerciseDate)
+                    .getSingleResult();
+            return exercise;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 }
