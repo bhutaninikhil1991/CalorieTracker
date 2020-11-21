@@ -26,8 +26,6 @@ public class ServingSize {
     private FoodItem foodItem;
 
     @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
             fetch = FetchType.EAGER
     )
     @Fetch(FetchMode.SELECT)

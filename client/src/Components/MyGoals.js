@@ -133,7 +133,7 @@ class MyGoals extends Component {
                     <form className="MyGoals__form" onSubmit={this.handleSubmit.bind(this)}>
                     <span className="MyGoals__form--input">
                         <label htmlFor="calories">Calories</label>
-                        <input type="text" name="calories" placeholder="1000" value={this.state.goals.calories}
+                        <input type="number" min="0" name="calories" placeholder="1000" value={this.state.goals.calories}
                                onChange={this.handleInputChange.bind(this)}/>
                     </span>
                         <span className="MyGoals__form--input">

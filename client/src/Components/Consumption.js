@@ -64,7 +64,7 @@ class Consumption extends Component {
         let newState = update(this.state, {
             items: {
                 [consumptionIndex]: {
-                    servingQuantity: {$set: newServingQuantity}
+                    servingQuantity: {$set: parseInt(newServingQuantity, 10)}
                 }
             },
             consumptionId: {$set: consumptionId}
@@ -157,7 +157,8 @@ class Consumption extends Component {
                         <img src={proteinIcon} alt="protein" title="protein"/>
                     </span>
                     <span className="Consumption__header--caloriesTotal">
-                        {itemTotals.calories ? itemTotals.calories : <img src={calorieIcon} alt="calories" title="calories"/>}
+                        {itemTotals.calories ? itemTotals.calories :
+                            <img src={calorieIcon} alt="calories" title="calories"/>}
                     </span>
                 </div>
                 {consumptions}

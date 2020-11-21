@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import ServingSize from "./ServingSize";
 import editIcon from "../resources/edit-icon.png";
 import checkIcon from "../resources/checkmark-icon.png";
+import update from "immutability-helper";
 
 /**
  * consumption Item class
@@ -21,6 +22,21 @@ class ConsumptionItem extends Component {
             }
         }
 
+    }
+
+    /**
+     * to update the state whenever the value of the property changes
+     * @param nextProps
+     * @param nextContext
+     */
+    componentWillReceiveProps(nextProps, nextContext) {
+        let newState = update(this.state, {
+            selectedServing: {
+                servingSize: {$set: nextProps.selectedServing},
+                quantity: {$set: nextProps.servingQuantity}
+            }
+        });
+        this.setState(newState);
     }
 
     /**

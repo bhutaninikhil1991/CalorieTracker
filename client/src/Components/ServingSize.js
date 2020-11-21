@@ -69,7 +69,7 @@ class ServingSize extends Component {
 
         return (
             <div className="ServingSelect animated fadeInDown" id="ServingSelect">
-                <input className="servingAmt" type="text" name="servingAmt" id="servingAmt" placeholder="1"
+                <input className="servingAmt" type="number" min="1" name="servingAmt" id="servingAmt" placeholder="1"
                        value={this.state.quantityValue} onChange={this.handleQuantityChange.bind(this)}
                        onClick={this.handleInputClick.bind(this)}/>
                 <select className="servingAmt" name="servingUnit" id="servingUnit"

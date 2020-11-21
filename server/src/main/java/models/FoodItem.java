@@ -38,8 +38,6 @@ public class FoodItem {
     private List<ServingSize> servingSizes = new ArrayList<>();
 
     @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
             fetch = FetchType.EAGER
     )
     @Fetch(FetchMode.SELECT)

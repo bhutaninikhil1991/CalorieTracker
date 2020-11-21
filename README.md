@@ -24,5 +24,11 @@ https://stackoverflow.com/questions/1196192/how-to-read-the-value-of-a-private-f
 
 https://stackoverflow.com/questions/49617486/how-to-use-lifecycle-method-getderivedstatefromprops-as-opposed-to-componentwill
 
+https://www.npmjs.com/package/highcharts-react-official
+
+https://reactrouter.com/native/guides/quick-start
+
+https://momentjs.com/
+
 username: newuser@yahoo.com
 password: testing

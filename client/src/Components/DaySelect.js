@@ -58,7 +58,7 @@ class DaySelect extends Component {
      * @param day
      */
     handleDayChange(day) {
-        if (day > this.props.todaysDate)
+        if (day.getDate() > this.props.todaysDate.getDate())
             return;
         this.props.changeSelectedDay(day);
     }

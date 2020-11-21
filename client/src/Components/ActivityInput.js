@@ -19,7 +19,7 @@ class ActivityInput extends Component {
             <div className="ActivityInput">
                 <img src={fireEmoji} alt={"Activity icon"}/>
                 <span>Calories burned from activity</span>
-                <input type="text" placeholder="0" className={this.props.caloriesBurned ? 'active' : ''}
+                <input type="number" min="0" placeholder="0" className={this.props.caloriesBurned ? 'active' : ''}
                        value={this.props.caloriesBurned ? this.props.caloriesBurned : ''}
                        onChange={this.handleActivityChange.bind(this)}/>
                 <span
