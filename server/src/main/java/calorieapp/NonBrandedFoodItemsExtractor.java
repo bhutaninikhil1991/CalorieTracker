@@ -27,7 +27,7 @@ public abstract class NonBrandedFoodItemsExtractor extends FoodItemsExtractor {
             try {
                 ServingSize servingSize = extractFoodPortion(foodPortion);
                 if (servingSize != null)
-                    foodItem.addServingSize(servingSize);
+                    foodItem.addServingSize(i, servingSize);
             } catch (Exception ex) {
                 continue;
             }

@@ -10,6 +10,7 @@ import utils.HelperUtils;
  * class to extract Branded food items
  */
 public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
+    private static final int DEFAULT_ID = 0;
 
     /**
      * extract food portion for Branded food
@@ -32,9 +33,9 @@ public class BrandedFoodItemsExtractor extends FoodItemsExtractor {
             double householdServingQuantity = householdServingSize.getServingAmount();
             ratio = calculateRatio(baseServingSizeQuantity, householdServingQuantity);
             householdServingSize.setRatio(ratio);
-            foodItem.addServingSize(householdServingSize);
+            foodItem.addServingSize(DEFAULT_ID, householdServingSize);
         } else {
-            foodItem.addServingSize(baseServingSize);
+            foodItem.addServingSize(DEFAULT_ID, baseServingSize);
         }
     }
 

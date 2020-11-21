@@ -146,9 +146,10 @@ public class FoodItem {
      * add serving size to the list
      *
      * @param servingSize
+     * @param id
      */
-    public void addServingSize(ServingSize servingSize) {
-        ServingSize newServingSize = new ServingSize(servingSize.getServingLabel(), servingSize.getServingAmount());
+    public void addServingSize(int id, ServingSize servingSize) {
+        ServingSize newServingSize = new ServingSize(id, servingSize.getServingLabel(), servingSize.getServingAmount());
         servingSizes.add(newServingSize);
         servingSize.setFoodItem(this);
     }

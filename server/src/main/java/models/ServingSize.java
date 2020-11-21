@@ -51,13 +51,12 @@ public class ServingSize {
      * @param id
      * @param servingLabel
      * @param servingAmount
-     * @param ratio
      */
-    public ServingSize(Integer id, String servingLabel, double servingAmount, double ratio) {
+    public ServingSize(Integer id, String servingLabel, double servingAmount) {
         this.id = id;
         this.servingLabel = servingLabel;
         this.servingAmount = servingAmount;
-        this.ratio = ratio;
+        this.ratio = 1.0 / servingAmount;
     }
 
     /**

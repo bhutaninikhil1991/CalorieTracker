@@ -19,6 +19,7 @@ import java.io.IOException;
 @Singleton
 public class FoodService {
     private FoodItemRepository foodItemRepository;
+    private static final int DEFAULT_ID = 0;
 
     /**
      * constructor
@@ -114,7 +115,7 @@ public class FoodService {
                 String label = servingJson.get("servingLabel").getAsString();
                 double quantity = servingJson.get("servingAmount").getAsDouble();
                 ServingSize servingSize = new ServingSize(label, quantity);
-                foodItem.addServingSize(servingSize);
+                foodItem.addServingSize(DEFAULT_ID, servingSize);
             }
             return foodItem;
         } catch (Exception ex) {
