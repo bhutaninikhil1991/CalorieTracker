@@ -32,3 +32,5 @@ https://momentjs.com/
 
 username: newuser@yahoo.com
 password: testing
+
+Before starting the application, please ensure postgresql server is up and running
